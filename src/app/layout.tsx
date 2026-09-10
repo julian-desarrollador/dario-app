@@ -16,7 +16,7 @@ const body = Manrope({
 export const metadata: Metadata = {
   title: "Ámbito — documentación ambiental bajo control",
   description:
-    "Ordená requisitos ambientales por jurisdicción y área. Para empresas, auditores, directores técnicos y consultoras.",
+    "Ordená requisitos ambientales por área. Para empresas, auditores, CEO, consultoras y profesionales.",
 };
 
 export default function RootLayout({

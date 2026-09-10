@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const howItems = [
   {
-    title: "Orden por jurisdicción y área",
+    title: "Orden por área",
     body: "Asimilables, peligrosos, efluentes, emisiones y legal: cada tema en su lugar, con su checklist.",
     icon: (
       <path
@@ -26,8 +26,8 @@ const howItems = [
     ),
   },
   {
-    title: "Menos papel, más evidencia",
-    body: "Subí PDFs, Word o Excel con código de documento, fechas y responsable. Todo queda registrado.",
+    title: "Menos papel, más accesibilidad",
+    body: "Subí PDFs, Word o Excel con código de documento, fechas y responsable. Más fácil de encontrar, listo para presentar.",
     icon: (
       <path
         strokeLinecap="round"
@@ -38,7 +38,7 @@ const howItems = [
     ),
   },
   {
-    title: "Listo para auditoría",
+    title: "Listo para presentar",
     body: "Un solo lugar para mostrar avances, gaps y evidencias cuando llega la inspección o el cliente.",
     icon: (
       <path
@@ -49,24 +49,44 @@ const howItems = [
       />
     ),
   },
+  {
+    title: "Pensar en la ecología",
+    body: "El objetivo es pensar en la ecología: menos papel, más control y evidencia que se puede mostrar.",
+    icon: (
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M12 21c4.5-4.2 7.5-7.6 7.5-11.2A7.5 7.5 0 0012 2.25 7.5 7.5 0 004.5 9.8C4.5 13.4 7.5 16.8 12 21z"
+      />
+    ),
+  },
 ];
 
 const audiences = [
   {
     title: "Empresas",
-    body: "Ordená la documentación ambiental de tu planta por área y jurisdicción. Sabé qué falta antes de que te lo pidan.",
+    body: "Ordená la documentación ambiental de tu planta por área. Sabé qué falta antes de que te lo pidan.",
   },
   {
     title: "Auditores",
     body: "Pedí evidencias con criterio: estados claros, historial y checklist para acelerar la revisión sin perder rigurosidad.",
   },
   {
-    title: "Directores técnicos",
-    body: "Visión rápida de cómo viene cada tema. Priorizá lo crítico y dejá trazabilidad de lo que se carga y se cierra.",
+    title: "CEO",
+    body: "Visión de la gestión para decidir con información clara.",
   },
   {
     title: "Consultoras",
     body: "Acompañá a varios clientes con la misma lógica de trabajo. Más valor en la entrega, menos tiempo en planillas sueltas.",
+  },
+  {
+    title: "Profesionales",
+    body: "Herramienta para el trabajo diario, más accesibilidad, listo para presentar.",
+  },
+  {
+    title: "Jefe, operario y gestión operacional",
+    body: "Visión de cómo viene cada tema y trazabilidad, en planta y en la operación.",
   },
 ];
 
@@ -247,12 +267,11 @@ export function Landing() {
                 <span className="text-[var(--leaf)]">bajo control</span>
               </h1>
               <p className="mt-5 max-w-lg text-base leading-relaxed text-white/70 sm:text-lg">
-                Ordená requisitos por jurisdicción y área. Damos valor al
-                trabajo de{" "}
+                Ordená requisitos por área. Damos valor al trabajo de{" "}
                 <strong className="font-semibold text-white">
-                  empresas, auditores, directores técnicos y consultoras
+                  empresas, auditores, CEO, consultoras y profesionales
                 </strong>
-                : menos papel, más evidencia, listo para demostrar.
+                : menos papel, más fácil accesibilidad, listo para presentar.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" className="btn-leaf">
@@ -282,7 +301,7 @@ export function Landing() {
             <h2 className="mt-3 text-center font-[family-name:var(--font-display)] text-3xl tracking-tight text-white md:text-4xl">
               Cómo Ámbito ordena tu gestión
             </h2>
-            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {howItems.map((item) => (
                 <div
                   key={item.title}
@@ -327,7 +346,7 @@ export function Landing() {
               Ayudamos a quien gestiona, revisa o acompaña la documentación
               ambiental a trabajar con más claridad y menos fricción.
             </p>
-            <div className="mt-12 grid gap-5 sm:grid-cols-2">
+            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {audiences.map((item) => (
                 <div
                   key={item.title}
