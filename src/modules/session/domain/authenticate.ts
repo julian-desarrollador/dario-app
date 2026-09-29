@@ -9,6 +9,13 @@ type Account = SessionUser & { password: string };
 
 const ACCOUNTS: Account[] = [
   {
+    id: "dario",
+    username: "dario",
+    password: "123",
+    name: "Dario",
+    role: "tecnico",
+  },
+  {
     id: "tecnico",
     username: "tecnico",
     password: "ambito",
@@ -30,7 +37,8 @@ export const SIGNERS: Pick<SessionUser, "id" | "name">[] = ACCOUNTS.filter(
 
 export function authenticate(username: string, password: string): SessionUser | null {
   const account = ACCOUNTS.find(
-    (item) => item.username === username.trim() && item.password === password,
+    (item) =>
+      item.username === username.trim().toLowerCase() && item.password === password,
   );
   if (!account) return null;
   return {

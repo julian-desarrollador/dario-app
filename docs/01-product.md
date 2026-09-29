@@ -16,10 +16,10 @@ La landing (`/`) presenta el producto. La aplicación vive en `/app`.
 
 ## Quién lo usa hoy
 
-En el prototipo hay dos personas, con sesión local:
+En el prototipo hay dos roles, con sesión local:
 
-- **Técnico.** Carga archivos. Su nombre queda en la versión y no se tipea a mano.
-- **Firmante.** Ve su bandeja en `/app/firmar` y da el OK de lo que tiene asignado.
+- **Técnico.** Carga archivos. Su nombre queda en la versión y no se tipea a mano. La cuenta de Dario (`dario` / `123`) entra con este rol.
+- **Firmante.** Ve su bandeja en `/app/firmar` y da el OK de lo que tiene asignado (`firmante` / `ambito`).
 
 Las cuentas de demostración viven en el cliente. No son un acceso de producción ([ADR-003](05-decisions.md#adr-003--el-acceso-del-prototipo-es-local-y-no-es-producción)).
 

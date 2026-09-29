@@ -97,7 +97,7 @@ function LoginScreen() {
         <Button type="submit" className="mt-5 w-full">
           Entrar
         </Button>
-        <p className="mt-4 text-xs text-[var(--muted)]">Demo: tecnico o firmante · clave ambito</p>
+        <p className="mt-4 text-xs text-[var(--muted)]">Usuario dario · clave 123</p>
       </form>
     </div>
   );
