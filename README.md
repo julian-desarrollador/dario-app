@@ -11,7 +11,7 @@ npm test
 
 Abrí [http://localhost:8464](http://localhost:8464).
 
-- `/` — landing
+- `/` — redirige a `/app`
 - `/app` — prototipo del expediente
 
 El código de negocio está en `src/modules/`. `clients` lleva las empresas de la consultora. `expediente` decide requisitos, vencimientos, versiones y el OK del firmante. `session` decide quién entró. Las pantallas de `src/app/app/` componen esos módulos.

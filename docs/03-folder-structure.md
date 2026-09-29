@@ -47,7 +47,7 @@ Los archivos de configuración viven en la raíz porque las herramientas los bus
 
 | Ruta | Qué es |
 | --- | --- |
-| `/` | Landing comercial |
+| `/` | Redirige a `/app` |
 | `/app` | Clientes de la consultora |
 | `/app/firmar` | Bandeja del firmante |
 | `/app/[clientId]` | Pendientes y áreas de un cliente |

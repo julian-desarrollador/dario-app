@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { FormDialog } from "@/components/ui/dialog.tsx";
 import { useAppState } from "@/modules/clients/components/app-state.tsx";
 import { enablingYears, industryTypes, locations } from "@/modules/expediente/catalog.ts";
 import { AreaProgressBar } from "@/modules/expediente/components/area-progress-bar.tsx";
 import { todayISO } from "@/modules/expediente/domain/document-code.ts";
+import { shortAreaName } from "@/modules/expediente/domain/labels.ts";
 import {
   clientRequirements,
   countByStatus,
@@ -46,9 +48,18 @@ export default function ClientsPage() {
                   href={`/app/${client.id}`}
                   className="block rounded-2xl bg-white px-4 py-4 ring-1 ring-[var(--ink)]/8"
                 >
-                  <span className="block font-medium">{client.name}</span>
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="font-medium">{client.name}</span>
+                    <span className="inline-flex shrink-0 items-center gap-0.5 text-sm font-medium text-[var(--moss)]">
+                      Ver expediente
+                      <ChevronRight className="size-4" aria-hidden />
+                    </span>
+                  </span>
                   <span className="mt-1 block text-sm text-[var(--muted)]">
                     {client.industry} · {client.province} · {client.municipality} · {client.enablingYear}
+                  </span>
+                  <span className="mt-2 block text-xs text-[var(--muted)]">
+                    {client.areas.map((area) => shortAreaName(area.name)).join(" · ")}
                   </span>
                   <span className="mt-3 block">
                     <AreaProgressBar percent={progressPercent(requirements, today)} label="Avance" />

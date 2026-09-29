@@ -12,7 +12,7 @@ Fijar qué es Ámbito y qué entra en esta fase. Las reglas del expediente está
 
 La pantalla de inicio muestra los clientes y qué hay que hacer: vencidos, por vencer y pendientes de OK. No es un tablero de todas las áreas a la vez.
 
-La landing (`/`) presenta el producto. La aplicación vive en `/app`.
+`/` redirige a `/app`. La landing comercial quedó en `src/components/Landing.tsx`, sin usarse.
 
 ## Quién lo usa hoy
 
