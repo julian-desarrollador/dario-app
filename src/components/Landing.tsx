@@ -50,8 +50,8 @@ const howItems = [
     ),
   },
   {
-    title: "Pensar en la ecología",
-    body: "El objetivo es pensar en la ecología: menos papel, más control y evidencia que se puede mostrar.",
+    title: "Pensar en la ecología con trazabilidad",
+    body: "El objetivo es pensar en la ecología con trazabilidad: qué se hizo, quién lo hizo y cuándo, listo para mostrar.",
     icon: (
       <path
         strokeLinecap="round"
@@ -97,7 +97,7 @@ const benefits = [
   },
   {
     title: "Trazabilidad",
-    body: "Código de documento, fechas, técnico y firmante: evidencia lista para mostrar.",
+    body: "Código, vencimiento, técnico, firmante y el historial de quién hizo qué: evidencia lista para mostrar.",
   },
   {
     title: "Ahorro de tiempo",
@@ -105,7 +105,7 @@ const benefits = [
   },
   {
     title: "Un solo lugar",
-    body: "Industria, provincia, municipio y año habilitante: el contexto queda amarrado a cada área.",
+    body: "Industria, provincia, municipio y año habilitante quedan en la ficha del cliente, no como filtros sueltos.",
   },
 ];
 
@@ -124,8 +124,8 @@ function ProductMockup() {
                 <span className="rounded-full bg-[var(--mist)] px-2 py-0.5 text-[10px] text-[var(--moss)]">
                   Asimilables
                 </span>
-                <span className="rounded-full bg-[#2563eb] px-2 py-0.5 text-[10px] text-white">
-                  Legal
+                <span className="rounded-full bg-[var(--moss)] px-2 py-0.5 text-[10px] text-white">
+                  Planta demo
                 </span>
               </div>
             </div>
@@ -133,7 +133,7 @@ function ProductMockup() {
               <div className="space-y-1.5">
                 {[
                   { name: "Asimilables", tone: "Al día", ok: true },
-                  { name: "Peligrosos", tone: "Falta 1", ok: false },
+                  { name: "Peligrosos", tone: "Vencido", ok: false },
                   { name: "Efluentes", tone: "Por vencer", ok: false },
                   { name: "Emisiones", tone: "Al día", ok: true },
                 ].map((row) => (
@@ -209,8 +209,8 @@ function ProductMockup() {
                 </div>
               </div>
               <div className="rounded-md bg-white p-1.5 text-[8px] text-[var(--muted)] shadow-sm">
-                <p className="font-medium text-[var(--ink)]">Checklist</p>
-                <p className="mt-0.5">2/3 completados</p>
+                <p className="font-medium text-[var(--ink)]">Para hacer</p>
+                <p className="mt-0.5">1 vencido · 1 por vencer</p>
               </div>
             </div>
           </div>
@@ -269,9 +269,9 @@ export function Landing() {
               <p className="mt-5 max-w-lg text-base leading-relaxed text-white/70 sm:text-lg">
                 Ordená requisitos por área. Damos valor al trabajo de{" "}
                 <strong className="font-semibold text-white">
-                  empresas, auditores, CEO, consultoras y profesionales
-                </strong>
-                : menos papel, más fácil accesibilidad, listo para presentar.
+                  empresas, auditores, CEO, consultoras y profesionales:
+                </strong>{" "}
+                menos papel, más fácil accesibilidad, listo para presentar.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/app" className="btn-leaf">

@@ -14,14 +14,20 @@ function lerpColor(from: string, to: string, t: number) {
   return `rgb(${mix(a.r, b.r)}, ${mix(a.g, b.g)}, ${mix(a.b, b.b)})`;
 }
 
-export function AreaProgressBar({ percent }: { percent: number }) {
+export function AreaProgressBar({
+  percent,
+  label = "Cómo venís",
+}: {
+  percent: number;
+  label?: string;
+}) {
   const p = Math.max(0, Math.min(100, percent));
   const color = lerpColor("#c45c2a", "#2f6b4f", p / 100);
 
   return (
     <div className="min-w-[10rem] flex-1 md:max-w-xs">
       <div className="mb-1 flex items-baseline justify-between gap-3 text-xs text-[var(--muted)]">
-        <span>Cómo venís</span>
+        <span>{label}</span>
         <span className="font-semibold" style={{ color }}>
           {p}%
         </span>

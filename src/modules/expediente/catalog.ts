@@ -1,46 +1,9 @@
-export type DocStatus = "ok" | "warn" | "missing";
-export type Filter = "all" | DocStatus;
-export type DocKind = "D" | "R" | "P";
-
-export type Doc = {
-  id: string;
-  name: string;
-  status: DocStatus;
-  detail: string;
-  href?: string;
-  docKind?: DocKind;
-  code?: string;
-  version?: string;
-  ingresoDate?: string;
-  documentDate?: string;
-  updateDate?: string;
-  tecnico?: string;
-  firmante?: string;
-  hasExpediente?: boolean;
-  fileName?: string;
-  fileMime?: string;
-  fileData?: string;
-};
-
-export type CheckItem = { id: string; label: string; done: boolean };
-
-export type SubArea = {
-  id: string;
-  name: string;
-  docs: Doc[];
-  checklist: CheckItem[];
-};
-
-export type Area = {
-  id: string;
-  name: string;
-  kind?: "operational" | "legal";
-  subAreas: SubArea[];
-};
+import type { DocKind } from "./domain/model.ts";
+import type { LegacyArea } from "./domain/legacy.ts";
 
 const BO = "https://www.boletinoficial.gob.ar/";
 
-export const initialAreas: Area[] = [
+export const initialAreas: LegacyArea[] = [
   {
     id: "asimilables",
     name: "Residuos asimilables",
@@ -290,6 +253,219 @@ export const initialAreas: Area[] = [
       },
     ],
   },
+  {
+    id: "gestion",
+    name: "Gestión ambiental",
+    kind: "operational",
+    pillar: "ambiente",
+    subAreas: [
+      {
+        id: "ga-iso",
+        name: "ISO 14001",
+        docs: [
+          {
+            id: "ga-d1",
+            name: "Manual del sistema de gestión",
+            status: "ok",
+            detail: "Versión vigente",
+          },
+          {
+            id: "ga-d2",
+            name: "Informe de auditoría interna",
+            status: "missing",
+            detail: "Pendiente del ciclo 2026",
+          },
+        ],
+        checklist: [
+          { id: "ga1", label: "Alcance del sistema definido", done: true },
+          { id: "ga2", label: "Auditoría interna del año", done: false },
+        ],
+      },
+      {
+        id: "ga-eia",
+        name: "Estudio de impacto",
+        docs: [
+          {
+            id: "ga-d3",
+            name: "Estudio de impacto ambiental",
+            status: "warn",
+            detail: "Revisión pendiente ante el organismo",
+          },
+        ],
+        checklist: [
+          { id: "ga3", label: "EIA presentado", done: true },
+          { id: "ga4", label: "Declaración de impacto obtenida", done: false },
+        ],
+      },
+      {
+        id: "ga-cnca",
+        name: "Categorización (CNCA / NCA)",
+        docs: [
+          {
+            id: "ga-d4",
+            name: "Certificado CNCA",
+            status: "ok",
+            detail: "Categoría vigente",
+          },
+          {
+            id: "ga-d5",
+            name: "Nivel de complejidad ambiental (NCA)",
+            status: "missing",
+            detail: "Sin constancia cargada",
+          },
+        ],
+        checklist: [
+          { id: "ga5", label: "Categorización industrial actualizada", done: false },
+        ],
+      },
+      {
+        id: "ga-girsu",
+        name: "Planes / GIRSU",
+        docs: [
+          {
+            id: "ga-d6",
+            name: "Plan de gestión ambiental",
+            status: "ok",
+            detail: "En seguimiento",
+          },
+        ],
+        checklist: [
+          { id: "ga6", label: "Plan GIRSU con responsable", done: true },
+          { id: "ga7", label: "Seguimiento del plan al día", done: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: "agua-gei",
+    name: "Agua y GEI",
+    kind: "operational",
+    pillar: "ambiente",
+    subAreas: [
+      {
+        id: "ag-agua",
+        name: "Agua",
+        docs: [
+          {
+            id: "ag-d1",
+            name: "Permiso de explotación de agua",
+            status: "ok",
+            detail: "Vigente",
+          },
+          {
+            id: "ag-d2",
+            name: "Monitoreo de agua",
+            status: "warn",
+            detail: "Próximo análisis: 12/10/2026",
+          },
+        ],
+        checklist: [
+          { id: "ag1", label: "Aptitud hidráulica revisada", done: true },
+          { id: "ag2", label: "Monitoreo de agua en fecha", done: false },
+        ],
+      },
+      {
+        id: "ag-gei",
+        name: "GEI",
+        docs: [
+          {
+            id: "ag-d3",
+            name: "Inventario de emisiones GEI",
+            status: "missing",
+            detail: "Sin carga del último período",
+          },
+          {
+            id: "ag-d4",
+            name: "Monitoreo GEI",
+            status: "warn",
+            detail: "Próximo análisis: 30/11/2026",
+          },
+        ],
+        checklist: [
+          { id: "ag3", label: "Fuentes de emisión identificadas", done: true },
+          { id: "ag4", label: "Inventario del período cerrado", done: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: "hys",
+    name: "Higiene y Seguridad",
+    kind: "operational",
+    pillar: "hys",
+    subAreas: [
+      {
+        id: "hs-riesgos",
+        name: "Riesgos",
+        docs: [
+          {
+            id: "hs-d1",
+            name: "Matriz de identificación de peligros",
+            status: "ok",
+            detail: "Actualizada",
+          },
+        ],
+        checklist: [
+          { id: "hs1", label: "Peligros identificados", done: true },
+          { id: "hs2", label: "Evaluación de riesgos cerrada", done: false },
+        ],
+      },
+      {
+        id: "hs-incendios",
+        name: "Incendios",
+        docs: [
+          {
+            id: "hs-d2",
+            name: "Estudio de carga de fuego",
+            status: "warn",
+            detail: "Vence la revisión el 20/12/2026",
+          },
+        ],
+        checklist: [
+          { id: "hs3", label: "Sistema de extinción verificado", done: true },
+          { id: "hs4", label: "Carga de fuego vigente", done: false },
+        ],
+      },
+      {
+        id: "hs-crisis",
+        name: "Plan de crisis",
+        docs: [
+          {
+            id: "hs-d3",
+            name: "Plan de crisis",
+            status: "missing",
+            detail: "Pendiente de carga",
+          },
+        ],
+        checklist: [
+          { id: "hs5", label: "Plan de crisis aprobado", done: false },
+          { id: "hs6", label: "Roles de emergencia asignados", done: false },
+        ],
+      },
+      {
+        id: "hs-monitoreos",
+        name: "Monitoreos",
+        docs: [
+          {
+            id: "hs-d4",
+            name: "Medición de ruido laboral",
+            status: "ok",
+            detail: "Última: 02/08/2026",
+          },
+          {
+            id: "hs-d5",
+            name: "Medición de iluminación",
+            status: "missing",
+            detail: "Sin medición cargada",
+          },
+        ],
+        checklist: [
+          { id: "hs7", label: "Monitoreo de ruido al día", done: true },
+          { id: "hs8", label: "Monitoreo de iluminación al día", done: false },
+        ],
+      },
+    ],
+  },
 ];
 
 export const industryTypes = [
@@ -309,79 +485,15 @@ export const locations = [
 
 export const enablingYears = ["2022", "2023", "2024", "2025", "2026"];
 
-export function areaDocs(area: Area): Doc[] {
-  return area.subAreas.flatMap((sub) => sub.docs);
-}
-
-export function areaChecks(area: Area): CheckItem[] {
-  return area.subAreas.flatMap((sub) => sub.checklist);
-}
-
-export function deriveAreaTone(area: Area): DocStatus {
-  const checks = areaChecks(area);
-  const docs = areaDocs(area);
-  const pending = checks.filter((item) => !item.done).length;
-  const hasMissingDoc = docs.some((doc) => doc.status === "missing");
-  const hasWarnDoc = docs.some((doc) => doc.status === "warn");
-  if (pending > 0 || hasMissingDoc) return "missing";
-  if (hasWarnDoc) return "warn";
-  return "ok";
-}
-
-export function deriveAreaLabel(area: Area): string {
-  const checks = areaChecks(area);
-  const docs = areaDocs(area);
-  const pending = checks.filter((item) => !item.done).length;
-  const warnDocs = docs.filter((doc) => doc.status === "warn").length;
-  const missingDocs = docs.filter((doc) => doc.status === "missing").length;
-
-  if (pending > 0) {
-    return pending === 1 ? "Falta 1 ítem" : `Faltan ${pending} ítems`;
-  }
-  if (missingDocs > 0) {
-    return missingDocs === 1 ? "Falta 1 norma" : `Faltan ${missingDocs} normas`;
-  }
-  if (warnDocs > 0) {
-    return warnDocs === 1 ? "1 por vencer" : `${warnDocs} por vencer`;
-  }
-  return "Al día";
-}
-
-export function areaProgressPercent(area: Area): number {
-  const checks = areaChecks(area);
-  const docs = areaDocs(area);
-  let score = 0;
-  let total = 0;
-
-  for (const item of checks) {
-    total += 1;
-    if (item.done) score += 1;
-  }
-  for (const doc of docs) {
-    total += 1;
-    if (doc.status === "ok") score += 1;
-    else if (doc.status === "warn") score += 0.5;
-  }
-
-  if (total === 0) return 0;
-  return Math.round((score / total) * 100);
-}
-
-export function shortAreaName(name: string) {
-  if (name.startsWith("Legal")) return "Legal";
-  const short = name
-    .replace("Residuos ", "")
-    .replace(" líquidos", "")
-    .replace(" gaseosas", "");
-  return short.charAt(0).toUpperCase() + short.slice(1);
-}
-
 export const areaCodes: Record<string, string> = {
   asimilables: "ASI",
   peligrosos: "PEL",
   efluentes: "EFL",
   emisiones: "EMI",
   legal: "LEG",
+  gestion: "GES",
+  "agua-gei": "AGI",
+  hys: "HYS",
 };
 
 export const docKindLabels: Record<DocKind, string> = {
@@ -392,58 +504,3 @@ export const docKindLabels: Record<DocKind, string> = {
 
 export const ACCEPT_FILES =
   ".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/png,image/jpeg";
-
-export const MAX_PERSIST_BYTES = 1.5 * 1024 * 1024;
-
-export function todayISO() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-/** /0125 = mes (01) + año (25) */
-export function monthYearCode(dateISO: string) {
-  const d = new Date(`${dateISO}T12:00:00`);
-  if (Number.isNaN(d.getTime())) return "0100";
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const yy = String(d.getFullYear()).slice(-2);
-  return `${mm}${yy}`;
-}
-
-export function buildDocCode(opts: {
-  kind: DocKind;
-  areaCode: string;
-  sequence: number;
-  dateISO: string;
-}) {
-  const seq = String(opts.sequence).padStart(3, "0");
-  const my = monthYearCode(opts.dateISO);
-  return `${opts.kind}-${opts.areaCode}-${seq}/${my}`;
-}
-
-export function nextSequenceForArea(area: Area): number {
-  const count = area.subAreas.reduce((n, sub) => n + sub.docs.length, 0);
-  return count + 1;
-}
-
-export function formatDocTitle(doc: Doc) {
-  if (doc.code) {
-    return `${doc.code} ${doc.version ?? "vers.0"}`;
-  }
-  return doc.name;
-}
-
-export function nextDocStatus(status: DocStatus): DocStatus {
-  if (status === "ok") return "warn";
-  if (status === "warn") return "missing";
-  return "ok";
-}
-
-export function statusBadge(status: DocStatus) {
-  if (status === "ok") return "Al día";
-  if (status === "warn") return "Por vencer";
-  return "Falta";
-}
-
-export function toneClass(tone: DocStatus) {
-  if (tone === "ok") return "text-[var(--moss)]";
-  return "text-[var(--alert)]";
-}

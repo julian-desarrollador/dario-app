@@ -7,12 +7,18 @@
     "dev": "next dev --webpack -p 8464",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --experimental-strip-types --test src/modules/expediente/domain/requirement-status.test.ts src/modules/expediente/domain/record-lifecycle.test.ts src/modules/expediente/domain/document-code.test.ts src/modules/clients/application/legacy-migration.test.ts src/modules/session/domain/authenticate.test.ts"
   },
   "dependencies": {
+    "@base-ui/react": "^1.8.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.48.0",
     "next": "16.2.4",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

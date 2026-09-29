@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# documentos privados locales
+/public/*.pdf
+/public/**/*.pdf
