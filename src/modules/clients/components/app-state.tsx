@@ -8,7 +8,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { createClient } from "@/modules/clients/application/legacy-migration.ts";
+import {
+  createClient,
+  deleteClient as dropClient,
+  updateClient as saveClientProfile,
+} from "@/modules/clients/application/legacy-migration.ts";
 import {
   downloadDataUrl,
   loadClients,
@@ -55,6 +59,8 @@ type AppContextValue = {
   login: (username: string, password: string) => boolean;
   logout: () => void;
   addClient: (input: Omit<Client, "id" | "areas">) => void;
+  updateClient: (id: string, input: Omit<Client, "id" | "areas">) => void;
+  removeClient: (id: string) => void;
   upload: (command: UploadCommand) => Promise<void>;
   approve: (clientId: string, requirementId: string) => void;
   removePending: (clientId: string, requirementId: string) => void;
@@ -109,6 +115,14 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         const id = `cli-${Date.now()}`;
         setClients((prev) => createClient(prev, { ...input, id }));
         setNotice("Cliente creado.");
+      },
+      updateClient(id, input) {
+        setClients((prev) => saveClientProfile(prev, id, input));
+        setNotice("Cliente actualizado.");
+      },
+      removeClient(id) {
+        setClients((prev) => dropClient(prev, id));
+        setNotice("Cliente eliminado.");
       },
       async upload(command) {
         if (!user) return;

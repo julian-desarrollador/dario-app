@@ -1,6 +1,8 @@
 import type { Area, Client, Requirement, RequirementStatus } from "./model.ts";
 import { deriveStatus, isFulfilled, pendingSignerOk } from "./requirement-status.ts";
 
+export type RequirementView = "expired" | "due-soon" | "missing" | "unsigned";
+
 export function areaRequirements(area: Area): Requirement[] {
   return area.topics.flatMap((topic) => topic.requirements);
 }
@@ -32,6 +34,11 @@ export function progressPercent(requirements: Requirement[], today: string): num
 
 export function pendingOkCount(requirements: Requirement[]): number {
   return requirements.filter(pendingSignerOk).length;
+}
+
+export function matchesView(requirement: Requirement, view: RequirementView, today: string): boolean {
+  if (view === "unsigned") return pendingSignerOk(requirement);
+  return deriveStatus(requirement, today) === view;
 }
 
 export function attentionFirst(requirements: Requirement[], today: string): Requirement[] {

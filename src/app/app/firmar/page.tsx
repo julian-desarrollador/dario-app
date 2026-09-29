@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { BackLink } from "@/components/back-link.tsx";
 import { useAppState } from "@/modules/clients/components/app-state.tsx";
 import { RequirementCard } from "@/modules/expediente/components/requirement-card.tsx";
 import { pendingSignerOk } from "@/modules/expediente/domain/requirement-status.ts";
@@ -23,9 +23,7 @@ export default function SignPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-5">
-      <Link href="/app" className="text-sm text-[var(--muted)]">
-        Clientes
-      </Link>
+      <BackLink href="/app">Volver a clientes</BackLink>
       <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl tracking-tight">
         Para firmar
       </h1>

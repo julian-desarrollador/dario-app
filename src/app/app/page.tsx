@@ -4,23 +4,25 @@ import Link from "next/link";
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
-import { FormDialog } from "@/components/ui/dialog.tsx";
+import { ConfirmDialog } from "@/components/ui/dialog.tsx";
+import { ActionMenu, ActionMenuItem } from "@/components/ui/menu.tsx";
+import { ClientFormDialog } from "@/modules/clients/components/client-form-dialog.tsx";
 import { useAppState } from "@/modules/clients/components/app-state.tsx";
-import { enablingYears, industryTypes, locations } from "@/modules/expediente/catalog.ts";
-import { AreaProgressBar } from "@/modules/expediente/components/area-progress-bar.tsx";
+import { StatusGlance } from "@/modules/expediente/components/status-summary.tsx";
 import { todayISO } from "@/modules/expediente/domain/document-code.ts";
-import { shortAreaName } from "@/modules/expediente/domain/labels.ts";
 import {
   clientRequirements,
   countByStatus,
   pendingOkCount,
-  progressPercent,
 } from "@/modules/expediente/domain/progress.ts";
+import type { Client } from "@/modules/expediente/domain/model.ts";
 
 export default function ClientsPage() {
   const app = useAppState();
   const today = todayISO();
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<Client | null>(null);
+  const [removing, setRemoving] = useState<Client | null>(null);
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-6">
@@ -43,29 +45,26 @@ export default function ClientsPage() {
             const requirements = clientRequirements(client);
             const counts = countByStatus(requirements, today);
             return (
-              <li key={client.id}>
-                <Link
-                  href={`/app/${client.id}`}
-                  className="block rounded-2xl bg-white px-4 py-4 ring-1 ring-[var(--ink)]/8"
-                >
-                  <span className="flex items-center justify-between gap-3">
-                    <span className="font-medium">{client.name}</span>
-                    <span className="inline-flex shrink-0 items-center gap-0.5 text-sm font-medium text-[var(--moss)]">
-                      Ver expediente
-                      <ChevronRight className="size-4" aria-hidden />
-                    </span>
-                  </span>
+              <li key={client.id} className="relative rounded-2xl bg-white ring-1 ring-[var(--ink)]/8">
+                <div className="absolute top-4 right-4 z-10">
+                  <ActionMenu label="Ficha">
+                    <ActionMenuItem onClick={() => setEditing(client)}>Editar ficha</ActionMenuItem>
+                    <ActionMenuItem destructive onClick={() => setRemoving(client)}>
+                      Eliminar cliente
+                    </ActionMenuItem>
+                  </ActionMenu>
+                </div>
+                <Link href={`/app/${client.id}`} className="block px-4 py-4 pr-24">
+                  <span className="block font-medium">{client.name}</span>
                   <span className="mt-1 block text-sm text-[var(--muted)]">
                     {client.industry} · {client.province} · {client.municipality} · {client.enablingYear}
                   </span>
-                  <span className="mt-2 block text-xs text-[var(--muted)]">
-                    {client.areas.map((area) => shortAreaName(area.name)).join(" · ")}
+                  <span className="mt-4 block">
+                    <StatusGlance counts={counts} unsigned={pendingOkCount(requirements)} />
                   </span>
-                  <span className="mt-3 block">
-                    <AreaProgressBar percent={progressPercent(requirements, today)} label="Avance" />
-                  </span>
-                  <span className="mt-2 block text-xs text-[var(--muted)]">
-                    {counts.expired} vencidos · {counts["due-soon"]} por vencer · {pendingOkCount(requirements)} sin OK
+                  <span className="mt-3 inline-flex items-center gap-0.5 text-sm font-medium text-[var(--moss)]">
+                    Ver expediente
+                    <ChevronRight className="size-4" aria-hidden />
                   </span>
                 </Link>
               </li>
@@ -73,96 +72,45 @@ export default function ClientsPage() {
           })}
         </ul>
       )}
-      <NewClientDialog open={open} onOpenChange={setOpen} />
-    </main>
-  );
-}
-
-function NewClientDialog({
-  open,
-  onOpenChange,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}) {
-  const app = useAppState();
-  const [name, setName] = useState("");
-  const [industry, setIndustry] = useState(industryTypes[0]);
-  const [place, setPlace] = useState(locations[0]);
-  const [year, setYear] = useState(enablingYears[3] ?? enablingYears[0]);
-  const [error, setError] = useState("");
-
-  return (
-    <FormDialog open={open} onOpenChange={onOpenChange} title="Nuevo cliente" description="El expediente arranca vacío, con las áreas de trabajo.">
-      <form
-        className="space-y-3"
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (!name.trim()) {
-            setError("Poné el nombre de la empresa.");
-            return;
-          }
-          const [province, municipality] = place.split(" · ");
-          app.addClient({
-            name: name.trim(),
-            industry,
-            province: province ?? place,
-            municipality: municipality ?? "",
-            enablingYear: year,
-          });
-          setName("");
-          onOpenChange(false);
+      <ClientFormDialog
+        open={open}
+        onOpenChange={setOpen}
+        formKey="nuevo"
+        title="Nuevo cliente"
+        description="El expediente arranca vacío, con las áreas de trabajo."
+        submitLabel="Crear"
+        onSubmit={(input) => app.addClient(input)}
+      />
+      <ClientFormDialog
+        open={editing !== null}
+        onOpenChange={(next) => {
+          if (!next) setEditing(null);
         }}
-      >
-        <label className="block text-sm">
-          Empresa
-          <input
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            className="mt-1 w-full rounded-lg border border-[var(--ink)]/12 px-3 py-2"
-          />
-        </label>
-        <label className="block text-sm">
-          Industria
-          <select
-            value={industry}
-            onChange={(event) => setIndustry(event.target.value)}
-            className="mt-1 w-full rounded-lg border border-[var(--ink)]/12 px-2 py-2"
-          >
-            {industryTypes.map((item) => (
-              <option key={item}>{item}</option>
-            ))}
-          </select>
-        </label>
-        <label className="block text-sm">
-          Provincia y municipio
-          <select
-            value={place}
-            onChange={(event) => setPlace(event.target.value)}
-            className="mt-1 w-full rounded-lg border border-[var(--ink)]/12 px-2 py-2"
-          >
-            {locations.map((item) => (
-              <option key={item}>{item}</option>
-            ))}
-          </select>
-        </label>
-        <label className="block text-sm">
-          Año habilitante
-          <select
-            value={year}
-            onChange={(event) => setYear(event.target.value)}
-            className="mt-1 w-full rounded-lg border border-[var(--ink)]/12 px-2 py-2"
-          >
-            {enablingYears.map((item) => (
-              <option key={item}>{item}</option>
-            ))}
-          </select>
-        </label>
-        {error ? <p className="text-sm text-[var(--alert)]">{error}</p> : null}
-        <div className="flex justify-end">
-          <Button type="submit">Crear</Button>
-        </div>
-      </form>
-    </FormDialog>
+        formKey={editing?.id ?? "editar"}
+        title="Editar cliente"
+        description="Cambia la ficha. El expediente queda igual."
+        submitLabel="Guardar"
+        initial={editing ?? undefined}
+        onSubmit={(input) => {
+          if (editing) app.updateClient(editing.id, input);
+        }}
+      />
+      <ConfirmDialog
+        open={removing !== null}
+        onOpenChange={(next) => {
+          if (!next) setRemoving(null);
+        }}
+        title="Eliminar cliente"
+        description={
+          removing
+            ? `Se borra ${removing.name} y todo su expediente. No se puede deshacer.`
+            : ""
+        }
+        confirmLabel="Eliminar"
+        onConfirm={() => {
+          if (removing) app.removeClient(removing.id);
+        }}
+      />
+    </main>
   );
 }

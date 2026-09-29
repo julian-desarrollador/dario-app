@@ -150,3 +150,15 @@ export function createClient(
 ): Client[] {
   return [...clients, { ...input, areas: templateAreas(input.id) }];
 }
+
+export function updateClient(
+  clients: Client[],
+  id: string,
+  input: Omit<Client, "id" | "areas">,
+): Client[] {
+  return clients.map((client) => (client.id === id ? { ...client, ...input } : client));
+}
+
+export function deleteClient(clients: Client[], id: string): Client[] {
+  return clients.filter((client) => client.id !== id);
+}

@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { use } from "react";
+import { BackLink } from "@/components/back-link.tsx";
 import { useAppState } from "@/modules/clients/components/app-state.tsx";
 import { RequirementCard } from "@/modules/expediente/components/requirement-card.tsx";
 
@@ -18,18 +18,14 @@ export default function AreaPage({
   if (!client || !area) {
     return (
       <main className="px-4 py-8">
-        <Link href="/app" className="text-sm text-[var(--moss)]">
-          Volver a clientes
-        </Link>
+        <BackLink href="/app">Volver a clientes</BackLink>
       </main>
     );
   }
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-5">
-      <Link href={`/app/${client.id}`} className="text-sm text-[var(--muted)]">
-        {client.name}
-      </Link>
+      <BackLink href={`/app/${client.id}`}>Volver a {client.name}</BackLink>
       <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl tracking-tight">{area.name}</h1>
       <div className="mt-6 space-y-8">
         {area.topics.map((topic) => (

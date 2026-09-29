@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { LegacyArea } from "../../expediente/domain/legacy.ts";
-import { dueDateFromText, legacyAreasToClient, DEMO_CLIENT } from "./legacy-migration.ts";
+import { dueDateFromText, deleteClient, legacyAreasToClient, DEMO_CLIENT, updateClient } from "./legacy-migration.ts";
 
 describe("dueDateFromText", () => {
   it("lee una fecha del detalle viejo", () => {
@@ -45,5 +45,29 @@ describe("legacyAreasToClient", () => {
     assert.equal(requirements.some((item) => item.id === "p1"), false);
     assert.equal(requirements.some((item) => item.id === "p9"), true);
     assert.equal(requirements[0].dueDate, "2026-08-15");
+  });
+
+  it("cambia la ficha y conserva el expediente", () => {
+    const client = legacyAreasToClient(areas, DEMO_CLIENT);
+    const [updated] = updateClient([client], client.id, {
+      name: "Otra planta",
+      industry: "Química",
+      province: client.province,
+      municipality: client.municipality,
+      enablingYear: client.enablingYear,
+    });
+    assert.equal(updated.name, "Otra planta");
+    assert.equal(updated.industry, "Química");
+    assert.equal(updated.areas[0].topics[0].requirements[0].id, client.areas[0].topics[0].requirements[0].id);
+  });
+
+  it("elimina solo el cliente pedido", () => {
+    const client = legacyAreasToClient(areas, DEMO_CLIENT);
+    const other = { ...client, id: "otro", name: "Otro" };
+    const left = deleteClient([client, other], client.id);
+    assert.deepEqual(
+      left.map((item) => item.id),
+      ["otro"],
+    );
   });
 });
