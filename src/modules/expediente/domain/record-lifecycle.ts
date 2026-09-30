@@ -144,7 +144,7 @@ export function uploadVersion(clients: Client[], input: UploadInput): LifecycleR
         openingNewVersion ? "replaced" : "uploaded",
         input.actor,
         openingNewVersion
-          ? `Nueva versión ${version.version} pendiente de OK`
+          ? `Nueva versión ${version.version} por firmar`
           : `Archivo cargado${version.fileName ? `: ${version.fileName}` : ""}`,
         input.now,
         `${input.id}-evt`,

@@ -57,6 +57,8 @@ export type Requirement = {
 export type Topic = {
   id: string;
   name: string;
+  /** Administrative file number for this subarea. Empty when not filed yet. */
+  expediente?: string;
   requirements: Requirement[];
 };
 

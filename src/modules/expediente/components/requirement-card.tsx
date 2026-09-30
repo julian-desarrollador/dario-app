@@ -9,7 +9,6 @@ import { useAppState } from "@/modules/clients/components/app-state.tsx";
 import { areaCodes, docKindLabels, ACCEPT_FILES } from "@/modules/expediente/catalog.ts";
 import {
   buildDocCode,
-  formatVersionLabel,
   nextDocumentSequence,
   todayISO,
 } from "@/modules/expediente/domain/document-code.ts";
@@ -39,7 +38,7 @@ function StatusIcon({ status }: { status: RequirementStatus }) {
 export function StatusBadge({ status }: { status: RequirementStatus }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${statusClass[status]}`}
+      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium ${statusClass[status]}`}
     >
       <StatusIcon status={status} />
       {statusLabel(status)}
@@ -80,7 +79,7 @@ export function RequirementCard({
           {requirement.taskDone ? "✓" : ""}
         </span>
         <span className="min-w-0 flex-1">
-          <span className={`block text-sm ${requirement.taskDone ? "text-[var(--muted)] line-through" : ""}`}>
+          <span className={`block text-base ${requirement.taskDone ? "text-[var(--muted)] line-through" : ""}`}>
             {requirement.name}
           </span>
         </span>
@@ -92,49 +91,61 @@ export function RequirementCard({
   const due = requirement.dueDate
     ? new Date(`${requirement.dueDate}T12:00:00`).toLocaleDateString("es-AR")
     : null;
+  const loaded = Boolean(current?.fileName);
 
   return (
     <article className="rounded-2xl bg-white px-4 py-4 ring-1 ring-[var(--ink)]/8">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="font-medium">{requirement.name}</h3>
-          <p className="mt-1 text-sm text-[var(--muted)]">
-            {[
-              current?.code ? `${current.code} ${formatVersionLabel(current.version)}` : null,
-              due ? `Vence ${due}` : null,
-              current?.tecnico ? `Técnico: ${current.tecnico}` : null,
-            ]
-              .filter(Boolean)
-              .join(" · ") || requirement.detail || "Sin archivo"}
+          <h3 className="text-lg font-medium">{requirement.name}</h3>
+          <p className="mt-2 text-base font-semibold">
+            {loaded ? "Documento cargado" : "Sin documento"}
           </p>
+          {loaded ? <p className="mt-1 text-base">{current?.fileName}</p> : null}
+          {due ? <p className="mt-1 text-base">Vence el {due}</p> : null}
+          {current?.tecnico ? (
+            <p className="mt-1 text-base text-[var(--muted)]">Técnico: {current.tecnico}</p>
+          ) : null}
           {pendingSignerOk(requirement) ? (
-            <p className="mt-1 text-xs font-medium text-[var(--moss)]">Pendiente de OK</p>
+            <p className="mt-1 text-base font-medium text-[var(--moss)]">Por firmar</p>
           ) : null}
         </div>
         <StatusBadge status={status} />
       </div>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <Button size="sm" onClick={() => setUploadOpen(true)}>
-          {current?.fileName ? "Editar archivo" : "Cargar archivo"}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Button className="h-11 px-4 text-base" onClick={() => setUploadOpen(true)}>
+          {loaded ? "Cambiar documento" : "Cargar documento"}
         </Button>
+        {loaded ? (
+          <Button
+            variant="secondary"
+            className="h-11 px-4 text-base"
+            onClick={() => app.download(requirement)}
+          >
+            Descargar
+          </Button>
+        ) : null}
         {canApprove ? (
-          <Button size="sm" variant="secondary" onClick={() => app.approve(clientId, requirement.id)}>
+          <Button
+            variant="secondary"
+            className="h-11 px-4 text-base"
+            onClick={() => app.approve(clientId, requirement.id)}
+          >
             Dar OK
           </Button>
         ) : null}
         {current?.firmanteOk ? (
-          <span className="inline-flex items-center rounded-full bg-[var(--mist)] px-3 text-xs font-medium text-[var(--moss)]">
+          <span className="inline-flex items-center rounded-full bg-[var(--mist)] px-3 text-base font-medium text-[var(--moss)]">
             OK del firmante
           </span>
         ) : null}
-        <ActionMenu label="Más">
-          <ActionMenuItem onClick={() => app.download(requirement)}>Descargar</ActionMenuItem>
-          {canDelete ? (
+        {canDelete ? (
+          <ActionMenu label="Más">
             <ActionMenuItem destructive onClick={() => setConfirmOpen(true)}>
               Eliminar
             </ActionMenuItem>
-          ) : null}
-        </ActionMenu>
+          </ActionMenu>
+        ) : null}
       </div>
       {requirement.history.length > 0 ? (
         <ul className="mt-3 space-y-1 border-t border-[var(--ink)]/8 pt-3 text-xs text-[var(--muted)]">
@@ -239,7 +250,7 @@ function UploadDialog({
     <FormDialog
       open={open}
       onOpenChange={onOpenChange}
-      title={requirement.current?.fileName ? "Editar archivo" : "Cargar archivo"}
+      title={requirement.current?.fileName ? "Cambiar documento" : "Cargar documento"}
       description={requirement.name}
     >
       <form onSubmit={submit} className="space-y-3">

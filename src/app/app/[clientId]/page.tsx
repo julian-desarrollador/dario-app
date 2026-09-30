@@ -12,7 +12,6 @@ import { AreaProgressBar } from "@/modules/expediente/components/area-progress-b
 import { RequirementCard } from "@/modules/expediente/components/requirement-card.tsx";
 import { emptyViewCopy, StatusSummary, viewTitle } from "@/modules/expediente/components/status-summary.tsx";
 import { todayISO } from "@/modules/expediente/domain/document-code.ts";
-import { shortAreaName } from "@/modules/expediente/domain/labels.ts";
 import {
   areaRequirements,
   attentionFirst,
@@ -146,7 +145,7 @@ export default function ClientPage({ params }: { params: Promise<{ clientId: str
                 href={`/app/${client.id}/${area.id}`}
                 className="block rounded-2xl bg-white px-4 py-3 ring-1 ring-[var(--ink)]/8"
               >
-                <span className="block font-medium">{shortAreaName(area.name)}</span>
+                <span className="block text-lg font-medium">{area.name}</span>
                 <span className="mt-2 block">
                   <AreaProgressBar
                     percent={progressPercent(areaRequirements(area), today)}

@@ -31,6 +31,7 @@ import {
 } from "@/modules/expediente/domain/record-lifecycle.ts";
 import type { Client, Requirement } from "@/modules/expediente/domain/model.ts";
 import { areaRequirements } from "@/modules/expediente/domain/progress.ts";
+import { setTopicExpediente as saveTopicExpediente } from "@/modules/expediente/domain/topic-expediente.ts";
 import {
   SIGNERS,
   currentUser,
@@ -61,6 +62,7 @@ type AppContextValue = {
   addClient: (input: Omit<Client, "id" | "areas">) => void;
   updateClient: (id: string, input: Omit<Client, "id" | "areas">) => void;
   removeClient: (id: string) => void;
+  setTopicExpediente: (clientId: string, topicId: string, expediente: string) => void;
   upload: (command: UploadCommand) => Promise<void>;
   approve: (clientId: string, requirementId: string) => void;
   removePending: (clientId: string, requirementId: string) => void;
@@ -124,6 +126,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         setClients((prev) => dropClient(prev, id));
         setNotice("Cliente eliminado.");
       },
+      setTopicExpediente(clientId, topicId, expediente) {
+        setClients((prev) => saveTopicExpediente(prev, clientId, topicId, expediente));
+        setNotice(expediente.trim() ? "Expediente guardado." : "Expediente borrado.");
+      },
       async upload(command) {
         if (!user) return;
         let file: FileInput | undefined;
@@ -178,7 +184,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             "Archivo grande: se puede descargar en esta sesión, pero no queda guardado al recargar.",
           );
         } else {
-          setNotice("Documento guardado. Queda pendiente el OK del firmante.");
+          setNotice("Documento guardado. Queda por firmar.");
         }
       },
       approve(clientId, requirementId) {

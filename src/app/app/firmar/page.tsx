@@ -28,7 +28,7 @@ export default function SignPage() {
         Para firmar
       </h1>
       {items.length === 0 ? (
-        <p className="mt-6 text-sm text-[var(--muted)]">No tenés registros pendientes de OK.</p>
+        <p className="mt-6 text-base text-[var(--muted)]">No tenés documentos por firmar.</p>
       ) : (
         <ul className="mt-6 space-y-3">
           {items.map((item) => (

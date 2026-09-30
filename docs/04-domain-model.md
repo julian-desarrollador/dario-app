@@ -1,6 +1,6 @@
 # 04 · Modelo de dominio
 
-**Estado:** vigente · **Owner:** Producto + Arquitectura · **Última actualización:** 2026-09-28
+**Estado:** vigente · **Owner:** Producto + Arquitectura · **Última actualización:** 2026-09-30
 
 ## Propósito
 
@@ -14,7 +14,7 @@ El prototipo guarda varios clientes en el mismo navegador. Todavía no aísla co
 
 ## 2. Requisito
 
-El **requisito** reemplaza al documento suelto y al checklist. Vive dentro de un tema, y el tema dentro de un área.
+El **requisito** reemplaza al documento suelto y al checklist. Vive dentro de un tema, y el tema dentro de un área. El tema es la subárea: tiene título y puede guardar el número de expediente. Adentro se lee si ese número y el documento están cargados.
 
 - **Archivo.** Pide una evidencia. Puede estar declarado (el catálogo dice que existe) o tener una versión con archivo.
 - **Tarea.** Se marca hecha o pendiente. No tiene archivo.

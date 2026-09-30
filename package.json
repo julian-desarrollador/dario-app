@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --test src/modules/expediente/domain/requirement-status.test.ts src/modules/expediente/domain/record-lifecycle.test.ts src/modules/expediente/domain/document-code.test.ts src/modules/expediente/domain/progress.test.ts src/modules/clients/application/legacy-migration.test.ts src/modules/session/domain/authenticate.test.ts"
+    "test": "node --experimental-strip-types --test src/modules/expediente/domain/requirement-status.test.ts src/modules/expediente/domain/record-lifecycle.test.ts src/modules/expediente/domain/document-code.test.ts src/modules/expediente/domain/progress.test.ts src/modules/expediente/domain/topic-expediente.test.ts src/modules/clients/application/legacy-migration.test.ts src/modules/session/domain/authenticate.test.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

@@ -11,7 +11,7 @@ const views: {
   { id: "expired", label: "Vencidos" },
   { id: "due-soon", label: "Por vencer" },
   { id: "missing", label: "Faltan" },
-  { id: "unsigned", label: "Sin OK" },
+  { id: "unsigned", label: "Por firmar" },
 ];
 
 function numberTone(id: RequirementView, total: number): string {
@@ -127,12 +127,12 @@ export const viewTitle: Record<RequirementView, string> = {
   expired: "Vencidos",
   "due-soon": "Por vencer",
   missing: "Faltan",
-  unsigned: "Sin OK",
+  unsigned: "Por firmar",
 };
 
 export const emptyViewCopy: Record<RequirementView, string> = {
   expired: "No hay vencidos en este cliente.",
   "due-soon": "No hay requisitos por vencer en este cliente.",
   missing: "No hay requisitos que falten en este cliente.",
-  unsigned: "No hay pendientes de OK en este cliente.",
+  unsigned: "No hay documentos por firmar en este cliente.",
 };

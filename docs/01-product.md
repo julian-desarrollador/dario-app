@@ -1,6 +1,6 @@
 # 01 · Producto
 
-**Estado:** vigente · **Owner:** Producto · **Última actualización:** 2026-09-29
+**Estado:** vigente · **Owner:** Producto · **Última actualización:** 2026-09-30
 
 ## Propósito
 
@@ -10,7 +10,7 @@ Fijar qué es Ámbito y qué entra en esta fase. Las reglas del expediente está
 
 Ámbito es la herramienta de una consultora ambiental para llevar el expediente de cada empresa cliente. Cada cliente tiene sus datos (industria, provincia, municipio, año habilitante) y sus áreas. Cada área tiene requisitos: unos piden un archivo y otros son tareas.
 
-En inicio cada cliente muestra su estado: vencidos, por vencer, faltan y sin OK. Ver expediente abre el cliente. La ficha se toca desde el menú. No es un tablero de todas las áreas a la vez.
+En inicio cada cliente muestra su estado: vencidos, por vencer, faltan y por firmar. Ver expediente abre el cliente. La ficha se toca desde el menú. No es un tablero de todas las áreas a la vez.
 
 `/` redirige a `/app`. La landing comercial quedó en `src/components/Landing.tsx`, sin usarse.
 
@@ -27,8 +27,9 @@ Las cuentas de demostración viven en el cliente. No son un acceso de producció
 
 - Crear clientes, corregir su ficha y eliminarlos. Al eliminar un cliente se borra su expediente.
 - Abrir el expediente de ejemplo "Planta demo".
-- Al abrir un cliente se ve primero su estado: vencidos, por vencer, faltan y sin OK. Tocar uno filtra la lista. La ficha se edita o se elimina desde el menú.
+- Al abrir un cliente se ve primero su estado: vencidos, por vencer, faltan y por firmar. Tocar uno filtra la lista. La ficha se edita o se elimina desde el menú.
 - Ver primero lo vencido, lo que vence en 30 días y lo que falta.
+- En cada área, la subárea tiene su título. Adentro se lee si el expediente y el documento están cargados.
 - Cargar un archivo con fecha de documento, vencimiento y firmante. El código se arma solo y se puede cambiar en opciones avanzadas.
 - Eliminar una versión subida hasta que el firmante da el OK.
 - Editar un archivo ya aprobado: se abre una versión nueva pendiente de OK y la aprobada queda en el historial.
