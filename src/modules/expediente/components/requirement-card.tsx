@@ -69,7 +69,7 @@ export function RequirementCard({
       <button
         type="button"
         onClick={() => app.toggle(clientId, requirement.id)}
-        className="flex w-full items-start gap-3 rounded-2xl bg-white px-4 py-3 text-left ring-1 ring-[var(--ink)]/8"
+        className="panel flex w-full items-start gap-3 px-4 py-3 text-left"
       >
         <span
           className={`mt-0.5 flex size-5 items-center justify-center rounded-full text-[10px] ${
@@ -94,7 +94,7 @@ export function RequirementCard({
   const loaded = Boolean(current?.fileName);
 
   return (
-    <article className="rounded-2xl bg-white px-4 py-4 ring-1 ring-[var(--ink)]/8">
+    <article className="panel px-4 py-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="text-lg font-medium">{requirement.name}</h3>

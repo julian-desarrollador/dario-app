@@ -19,19 +19,22 @@ export default function AreaPage({
   if (!client || !area) {
     return (
       <main className="px-4 py-8">
-        <BackLink href="/app">Volver a clientes</BackLink>
+        <BackLink href="/app/gestion">Volver a Gestión Ambiental</BackLink>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-5">
+    <main className="mx-auto max-w-5xl px-4 py-5">
       <BackLink href={`/app/${client.id}`}>Volver a {client.name}</BackLink>
-      <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl tracking-tight">{area.name}</h1>
+      <div className="panel mt-3 px-5 py-5">
+        <h1 className="text-3xl font-semibold tracking-tight">{area.name}</h1>
+        <p className="mt-1 text-base text-[var(--muted)]">{client.name}</p>
+      </div>
       <div className="mt-6 space-y-10">
         {area.topics.map((topic) => (
           <section key={topic.id}>
-            <h2 className="font-[family-name:var(--font-display)] text-2xl tracking-tight">
+            <h2 className="text-2xl font-semibold tracking-tight">
               {topic.name}
             </h2>
             <div className="mt-3">

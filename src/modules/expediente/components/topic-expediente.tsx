@@ -3,28 +3,44 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { useAppState } from "@/modules/clients/components/app-state.tsx";
+import { TRAMITE_OPTIONS, tramiteLabel } from "@/modules/expediente/domain/labels.ts";
 import type { Topic } from "@/modules/expediente/domain/model.ts";
+
+function formatDate(iso: string) {
+  return new Date(`${iso}T12:00:00`).toLocaleDateString("es-AR");
+}
+
+const fieldClass = "mt-2 w-full rounded-lg border border-[var(--ink)]/15 px-3 py-2 text-base";
 
 export function TopicExpediente({ clientId, topic }: { clientId: string; topic: Topic }) {
   const app = useAppState();
   const [editing, setEditing] = useState(false);
-  const [value, setValue] = useState(topic.expediente ?? "");
+  const [number, setNumber] = useState(topic.expediente ?? "");
+  const [tramite, setTramite] = useState(topic.tramite ?? "");
+  const [renovacion, setRenovacion] = useState(topic.renovacion ?? "");
   const filed = topic.expediente?.trim() ?? "";
+  const hasFiling = Boolean(filed || topic.tramite || topic.renovacion);
 
   function openEditor() {
-    setValue(filed);
+    setNumber(filed);
+    setTramite(topic.tramite ?? "");
+    setRenovacion(topic.renovacion ?? "");
     setEditing(true);
   }
 
   function save() {
-    app.setTopicExpediente(clientId, topic.id, value);
+    app.setTopicExpediente(clientId, topic.id, {
+      expediente: number,
+      tramite,
+      renovacion,
+    });
     setEditing(false);
   }
 
   if (editing) {
     return (
       <form
-        className="rounded-2xl bg-white px-4 py-4 ring-1 ring-[var(--ink)]/8"
+        className="panel px-4 py-4"
         onSubmit={(event) => {
           event.preventDefault();
           save();
@@ -34,10 +50,36 @@ export function TopicExpediente({ clientId, topic }: { clientId: string; topic: 
           Número de expediente
           <input
             id={`expediente-${topic.id}`}
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
-            className="mt-2 w-full rounded-lg border border-[var(--ink)]/15 px-3 py-2 text-base"
+            value={number}
+            onChange={(event) => setNumber(event.target.value)}
+            className={fieldClass}
             autoFocus
+          />
+        </label>
+        <label className="mt-3 block text-base" htmlFor={`tramite-${topic.id}`}>
+          Estado del trámite
+          <select
+            id={`tramite-${topic.id}`}
+            value={tramite}
+            onChange={(event) => setTramite(event.target.value)}
+            className={fieldClass}
+          >
+            <option value="">Sin estado</option>
+            {TRAMITE_OPTIONS.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="mt-3 block text-base" htmlFor={`renovacion-${topic.id}`}>
+          Renovación
+          <input
+            id={`renovacion-${topic.id}`}
+            type="date"
+            value={renovacion}
+            onChange={(event) => setRenovacion(event.target.value)}
+            className={fieldClass}
           />
         </label>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -58,21 +100,25 @@ export function TopicExpediente({ clientId, topic }: { clientId: string; topic: 
   }
 
   return (
-    <div className="rounded-2xl bg-white px-4 py-4 ring-1 ring-[var(--ink)]/8">
+    <div className="panel px-4 py-4">
       {filed ? (
-        <p className="font-[family-name:var(--font-display)] text-2xl tracking-tight">
-          Expediente {filed}
-        </p>
+        <p className="text-2xl font-semibold tracking-tight">Expediente {filed}</p>
       ) : (
         <p className="text-base font-semibold">Sin expediente</p>
       )}
+      {hasFiling ? (
+        <p className="mt-2 text-base">{tramiteLabel(topic.tramite)}</p>
+      ) : null}
+      {topic.renovacion ? (
+        <p className="mt-1 text-base">Renueva el {formatDate(topic.renovacion)}</p>
+      ) : null}
       <Button
         type="button"
-        variant={filed ? "secondary" : "default"}
+        variant={hasFiling ? "secondary" : "default"}
         className="mt-3 h-11 px-4 text-base"
         onClick={openEditor}
       >
-        {filed ? "Cambiar" : "Anotar expediente"}
+        {hasFiling ? "Cambiar" : "Anotar expediente"}
       </Button>
     </div>
   );

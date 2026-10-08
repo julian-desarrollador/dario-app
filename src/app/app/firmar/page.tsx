@@ -22,11 +22,12 @@ export default function SignPage() {
   );
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-5">
-      <BackLink href="/app">Volver a clientes</BackLink>
-      <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl tracking-tight">
-        Para firmar
-      </h1>
+    <main className="mx-auto max-w-5xl px-4 py-5">
+      <BackLink href="/app/gestion">Volver a Gestión Ambiental</BackLink>
+      <div className="panel mt-3 px-5 py-5">
+        <h1 className="text-3xl font-semibold tracking-tight">Para firmar</h1>
+        <p className="mt-1 text-base text-[var(--muted)]">Documentos asignados a tu usuario.</p>
+      </div>
       {items.length === 0 ? (
         <p className="mt-6 text-base text-[var(--muted)]">No tenés documentos por firmar.</p>
       ) : (

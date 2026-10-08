@@ -34,6 +34,24 @@ a {
   text-decoration: none;
 }
 
+a.nav-idle {
+  color: var(--muted);
+}
+
+a.nav-active {
+  color: #ffffff;
+  background: var(--moss);
+}
+
+a.nav-active:hover {
+  color: #ffffff;
+  background: var(--forest);
+}
+
+a.link-moss {
+  color: var(--moss);
+}
+
 button,
 a,
 input,
@@ -180,6 +198,13 @@ select {
   transform: translateY(-1px);
 }
 
+.panel {
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
 .btn-nav {
   display: inline-flex;
   align-items: center;
@@ -188,5 +213,20 @@ select {
   border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
   padding: 0.5rem 1rem;
   transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+@media print {
+  .app-chrome,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff;
+  }
+
+  .print-break {
+    break-before: page;
+  }
 }
 

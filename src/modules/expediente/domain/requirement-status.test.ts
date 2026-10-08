@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import type { Requirement } from "./model.ts";
-import { deriveStatus, pendingSignerOk } from "./requirement-status.ts";
+import { deriveStatus, dueDistance, pendingSignerOk } from "./requirement-status.ts";
 
 const today = "2026-09-28";
 
@@ -82,5 +82,15 @@ describe("pendingSignerOk", () => {
       ),
       true,
     );
+  });
+});
+
+describe("dueDistance", () => {
+  it("dice los días que faltan, el día de hoy y los que ya pasaron", () => {
+    assert.equal(dueDistance(today, "2026-10-12"), "faltan 14 días");
+    assert.equal(dueDistance(today, "2026-09-29"), "falta 1 día");
+    assert.equal(dueDistance(today, today), "vence hoy");
+    assert.equal(dueDistance(today, "2026-09-27"), "venció hace 1 día");
+    assert.equal(dueDistance(today, "2026-08-15"), "venció hace 44 días");
   });
 });

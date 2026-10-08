@@ -1,4 +1,15 @@
-import type { RequirementStatus } from "./model.ts";
+import type { RequirementStatus, TramiteStatus } from "./model.ts";
+
+export const TRAMITE_OPTIONS: { id: TramiteStatus; label: string }[] = [
+  { id: "en-tramite", label: "En trámite" },
+  { id: "con-notificacion", label: "Con notificación" },
+  { id: "con-renovacion", label: "Con renovación" },
+  { id: "finalizado-sin-renovacion", label: "Finalizado sin renovación" },
+];
+
+export function tramiteLabel(tramite: TramiteStatus | undefined): string {
+  return TRAMITE_OPTIONS.find((option) => option.id === tramite)?.label ?? "Sin estado";
+}
 
 export function statusLabel(status: RequirementStatus): string {
   if (status === "ok") return "Al día";

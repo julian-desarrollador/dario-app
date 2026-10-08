@@ -4,6 +4,7 @@ import Link from "next/link";
 import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BackLink } from "@/components/back-link.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import { ConfirmDialog } from "@/components/ui/dialog.tsx";
 import { ActionMenu, ActionMenuItem } from "@/components/ui/menu.tsx";
 import { ClientFormDialog } from "@/modules/clients/components/client-form-dialog.tsx";
@@ -42,7 +43,7 @@ export default function ClientPage({ params }: { params: Promise<{ clientId: str
     return (
       <main className="px-4 py-8">
         <p>No encontramos ese cliente.</p>
-        <BackLink href="/app">Volver a clientes</BackLink>
+        <BackLink href="/app/gestion">Volver a Gestión Ambiental</BackLink>
       </main>
     );
   }
@@ -75,22 +76,29 @@ export default function ClientPage({ params }: { params: Promise<{ clientId: str
   const requirements = clientRequirements(client);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-5">
-      <BackLink href="/app">Volver a clientes</BackLink>
-      <div className="mt-2 flex items-start justify-between gap-3">
-        <h1 className="font-[family-name:var(--font-display)] text-3xl tracking-tight">
-          {client.name}
-        </h1>
-        <ActionMenu label="Ficha">
-          <ActionMenuItem onClick={() => setEditing(true)}>Editar ficha</ActionMenuItem>
-          <ActionMenuItem destructive onClick={() => setRemoving(true)}>
-            Eliminar cliente
-          </ActionMenuItem>
-        </ActionMenu>
+    <main className="mx-auto max-w-5xl px-4 py-5">
+      <BackLink href="/app/gestion">Volver a Gestión Ambiental</BackLink>
+      <div className="panel mt-3 px-5 py-5">
+        <div className="flex items-start justify-between gap-3">
+          <h1 className="text-3xl font-semibold tracking-tight">{client.name}</h1>
+          <ActionMenu label="Ficha">
+            <ActionMenuItem onClick={() => setEditing(true)}>Editar ficha</ActionMenuItem>
+            <ActionMenuItem destructive onClick={() => setRemoving(true)}>
+              Eliminar cliente
+            </ActionMenuItem>
+          </ActionMenu>
+        </div>
+        <p className="mt-1 text-base text-[var(--muted)]">
+          {client.industry} · {client.province} · {client.municipality} · {client.enablingYear}
+        </p>
+        <Button
+          type="button"
+          className="mt-4 h-11 px-4 text-base"
+          onClick={() => router.push(`/app/${client.id}/inspeccion`)}
+        >
+          Ver para la inspección
+        </Button>
       </div>
-      <p className="mt-1 text-sm text-[var(--muted)]">
-        {client.industry} · {client.province} · {client.municipality} · {client.enablingYear}
-      </p>
 
       <div className="mt-4">
         <StatusSummary
@@ -143,7 +151,7 @@ export default function ClientPage({ params }: { params: Promise<{ clientId: str
             <li key={area.id}>
               <Link
                 href={`/app/${client.id}/${area.id}`}
-                className="block rounded-2xl bg-white px-4 py-3 ring-1 ring-[var(--ink)]/8"
+                className="panel block px-4 py-3"
               >
                 <span className="block text-lg font-medium">{area.name}</span>
                 <span className="mt-2 block">

@@ -54,11 +54,22 @@ export type Requirement = {
   history: HistoryEvent[];
 };
 
+/** Administrative status of the file itself. Separate from document due dates. */
+export type TramiteStatus =
+  | "en-tramite"
+  | "con-notificacion"
+  | "con-renovacion"
+  | "finalizado-sin-renovacion";
+
 export type Topic = {
   id: string;
   name: string;
   /** Administrative file number for this subarea. Empty when not filed yet. */
   expediente?: string;
+  /** Chosen by hand. Missing means Sin estado. */
+  tramite?: TramiteStatus;
+  /** YYYY-MM-DD. When this file is due for renewal. */
+  renovacion?: string;
   requirements: Requirement[];
 };
 

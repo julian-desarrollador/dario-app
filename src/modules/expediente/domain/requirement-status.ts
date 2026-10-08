@@ -2,7 +2,7 @@ import type { Requirement, RequirementStatus } from "./model.ts";
 
 export const DUE_SOON_DAYS = 30;
 
-function daysUntil(today: string, due: string): number {
+export function daysUntil(today: string, due: string): number {
   const start = new Date(`${today}T12:00:00`);
   const end = new Date(`${due}T12:00:00`);
   return Math.round((end.getTime() - start.getTime()) / 86_400_000);
@@ -40,6 +40,16 @@ export function deriveStatus(requirement: Requirement, today: string): Requireme
 
 export function isFulfilled(status: RequirementStatus): boolean {
   return status === "ok" || status === "due-soon";
+}
+
+/** How far a due date sits from today, in words. */
+export function dueDistance(today: string, due: string): string {
+  const days = daysUntil(today, due);
+  if (days === 0) return "vence hoy";
+  if (days === 1) return "falta 1 día";
+  if (days > 1) return `faltan ${days} días`;
+  if (days === -1) return "venció hace 1 día";
+  return `venció hace ${Math.abs(days)} días`;
 }
 
 export function pendingSignerOk(requirement: Requirement): boolean {

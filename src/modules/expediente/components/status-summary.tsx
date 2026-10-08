@@ -50,7 +50,7 @@ function StatusFigure({
   return (
     <>
       <span
-        className={`font-[family-name:var(--font-display)] leading-none tracking-tight ${
+        className={`font-semibold leading-none tracking-tight ${
           compact ? "text-2xl" : "text-3xl"
         } ${numberTone(id, total)}`}
       >
