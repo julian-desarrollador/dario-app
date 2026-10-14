@@ -1,4 +1,4 @@
-import { authenticate, type SessionUser } from "../../domain/authenticate.ts";
+import { accountForRole, authenticate, type SessionUser } from "../../domain/authenticate.ts";
 
 const SESSION_KEY = "ambito-session-user";
 
@@ -7,6 +7,11 @@ export function login(username: string, password: string): SessionUser | null {
   if (!session || typeof window === "undefined") return null;
   window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
   return session;
+}
+
+export function loginAsRole(role: SessionUser["role"]): SessionUser | null {
+  const account = accountForRole(role);
+  return login(account.username, account.password);
 }
 
 export function logout() {

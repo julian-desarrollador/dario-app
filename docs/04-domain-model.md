@@ -1,6 +1,6 @@
 # 04 · Modelo de dominio
 
-**Estado:** vigente · **Owner:** Producto + Arquitectura · **Última actualización:** 2026-10-08
+**Estado:** vigente · **Owner:** Producto + Arquitectura · **Última actualización:** 2026-10-13
 
 ## Propósito
 
@@ -39,6 +39,8 @@ Cada carga es una **versión**. Mientras no tiene OK del firmante asignado, se p
 Si el archivo ya estaba aprobado, **Editar archivo** abre una versión nueva pendiente de OK. La aprobada pasa a `previous` y sigue en el historial ([ADR-008](05-decisions.md#adr-008--editar-un-archivo-aprobado-abre-una-versión-nueva)). Si se elimina la versión pendiente, vuelve la aprobada.
 
 Cada acción (carga, reemplazo, OK, eliminación) agrega un evento con persona, momento y resumen. El historial no se reescribe desde la pantalla.
+
+La carga guarda el plazo que regía en ese momento (`deadline`). El informe del mes y el cronograma comparan la fecha de carga con ese plazo, no con el vencimiento nuevo del documento ([ADR-014](05-decisions.md#adr-014--el-informe-del-mes-compara-la-carga-con-el-plazo)). Una tarea guarda el día en que se marcó hecha.
 
 ## 5. Migración
 

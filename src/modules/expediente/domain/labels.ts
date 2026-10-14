@@ -11,6 +11,12 @@ export function tramiteLabel(tramite: TramiteStatus | undefined): string {
   return TRAMITE_OPTIONS.find((option) => option.id === tramite)?.label ?? "Sin estado";
 }
 
+export function scheduleTimingLabel(timing: "on-time" | "late" | "unspecified" | undefined): string {
+  if (timing === "on-time") return "A tiempo";
+  if (timing === "late") return "Fuera de tiempo";
+  return "Realizada";
+}
+
 export function statusLabel(status: RequirementStatus): string {
   if (status === "ok") return "Al día";
   if (status === "due-soon") return "Por vencer";

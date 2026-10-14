@@ -29,6 +29,8 @@ export type RecordVersion = {
   fileMime?: string;
   fileData?: string;
   documentDate?: string;
+  /** YYYY-MM-DD. Due date in force when this version was uploaded. */
+  deadline?: string;
   uploaded: boolean;
   tecnico?: string;
   firmante?: string;
@@ -46,6 +48,8 @@ export type Requirement = {
   /** YYYY-MM-DD. Drives vencido / por vencer. */
   dueDate?: string;
   taskDone?: boolean;
+  /** YYYY-MM-DD. When the task was marked done. Cleared when unmarked. */
+  doneAt?: string;
   /** Catalog evidence that exists even before a file is digitized. */
   declared?: boolean;
   current?: RecordVersion;
@@ -88,5 +92,7 @@ export type Client = {
   province: string;
   municipality: string;
   enablingYear: string;
+  /** 1 after the one-time schedule examples were added to Planta demo. */
+  demoExamples?: number;
   areas: Area[];
 };

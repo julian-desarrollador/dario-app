@@ -48,8 +48,91 @@ a.nav-active:hover {
   background: var(--forest);
 }
 
+.app-side {
+  width: 260px;
+  transition: width 200ms ease;
+}
+
+.app-side.is-rail {
+  width: 72px;
+}
+
+.app-main {
+  transition: padding-left 200ms ease;
+}
+
+@media (min-width: 768px) {
+  .app-main {
+    padding-left: 260px;
+  }
+
+  .app-main.is-rail {
+    padding-left: 72px;
+  }
+}
+
+a.nav-side,
+a.nav-side-active,
+a.nav-side-icon,
+a.nav-side-icon-active {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.75rem 1.25rem 0.75rem 17px;
+  border-left: 3px solid transparent;
+  color: var(--muted);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+a.nav-side-active,
+a.nav-side-icon-active {
+  color: var(--forest);
+  background: var(--mist);
+  border-left-color: var(--moss);
+}
+
+a.nav-side-active svg,
+a.nav-side-icon-active svg {
+  color: var(--moss);
+}
+
+a.nav-side:hover,
+a.nav-side-icon:hover {
+  color: var(--forest);
+}
+
+a.nav-side-icon,
+a.nav-side-icon-active {
+  justify-content: center;
+  gap: 0;
+  padding-right: 0;
+  padding-left: 0;
+}
+
 a.link-moss {
   color: var(--moss);
+}
+
+a.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  height: 2.75rem;
+  padding: 0 1rem 0 0.6rem;
+  border-radius: 9999px;
+  background: var(--mist);
+  color: var(--forest);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+a.back-link:hover {
+  background: var(--forest);
+  color: #ffffff;
 }
 
 button,
@@ -227,6 +310,11 @@ select {
 
   .print-break {
     break-before: page;
+  }
+
+  .app-main,
+  .app-main.is-rail {
+    padding-left: 0 !important;
   }
 }
 

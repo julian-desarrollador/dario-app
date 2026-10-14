@@ -108,6 +108,10 @@ export function uploadVersion(clients: Client[], input: UploadInput): LifecycleR
   }
 
   const openingNewVersion = Boolean(requirement.current?.firmanteOk);
+  const replacingPending = Boolean(requirement.current?.uploaded && !requirement.current.firmanteOk);
+  const deadline = replacingPending
+    ? requirement.current?.deadline ?? requirement.dueDate
+    : requirement.dueDate ?? input.dueDate;
   const version: RecordVersion = {
     id: input.id,
     version: openingNewVersion ? nextVersionNumber(requirement) : (requirement.current?.version ?? 1),
@@ -122,6 +126,7 @@ export function uploadVersion(clients: Client[], input: UploadInput): LifecycleR
           ? undefined
           : requirement.current?.fileData,
     documentDate: input.documentDate,
+    deadline: deadline || undefined,
     uploaded: true,
     tecnico: input.actor.name,
     firmante: input.signer?.name ?? requirement.current?.firmante,
@@ -208,10 +213,15 @@ export function deletePendingVersion(
   return { ok: true, clients: mapped.clients };
 }
 
-export function toggleTask(clients: Client[], clientId: string, requirementId: string): Client[] {
-  return mapRequirement(clients, clientId, requirementId, (requirement) =>
-    requirement.kind === "task"
-      ? { ...requirement, taskDone: !requirement.taskDone }
-      : requirement,
-  ).clients;
+export function toggleTask(
+  clients: Client[],
+  clientId: string,
+  requirementId: string,
+  today: string,
+): Client[] {
+  return mapRequirement(clients, clientId, requirementId, (requirement) => {
+    if (requirement.kind !== "task") return requirement;
+    const taskDone = !requirement.taskDone;
+    return { ...requirement, taskDone, doneAt: taskDone ? today.slice(0, 10) : undefined };
+  }).clients;
 }

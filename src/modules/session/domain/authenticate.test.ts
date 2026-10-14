@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { authenticate } from "./authenticate.ts";
+import { accountForRole, authenticate } from "./authenticate.ts";
 
 describe("authenticate", () => {
   it("acepta la cuenta demo del técnico", () => {
@@ -17,5 +17,12 @@ describe("authenticate", () => {
 
   it("rechaza una clave incorrecta", () => {
     assert.equal(authenticate("tecnico", "otra"), null);
+  });
+
+  it("arma el par operario y dueño para probar sin escribir la clave", () => {
+    const operario = accountForRole("tecnico");
+    const dueno = accountForRole("firmante");
+    assert.equal(authenticate(operario.username, operario.password)?.name, "Dario");
+    assert.equal(authenticate(dueno.username, dueno.password)?.role, "firmante");
   });
 });

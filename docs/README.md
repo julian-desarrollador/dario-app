@@ -13,6 +13,7 @@ La documentación técnica es la fuente de verdad del proyecto y se versiona jun
 | [05-decisions.md](05-decisions.md) | Decisiones de arquitectura (ADR) |
 | [06-coding-standards.md](06-coding-standards.md) | Cómo se escribe el código |
 | [07-fase-2.md](07-fase-2.md) | Qué hay que decidir antes de salir del navegador |
+| [pedidos-2026-10-08.md](pedidos-2026-10-08.md) | Audio de Dario: operario, supervisor e informe del mes |
 
 ## Cómo trabajar con esta documentación
 

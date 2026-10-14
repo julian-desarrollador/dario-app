@@ -1,6 +1,6 @@
 # 01 · Producto
 
-**Estado:** vigente · **Owner:** Producto · **Última actualización:** 2026-10-08
+**Estado:** vigente · **Owner:** Producto · **Última actualización:** 2026-10-13
 
 ## Propósito
 
@@ -18,15 +18,15 @@ El inicio es Novedades. El expediente de cada empresa se abre desde Gestión Amb
 
 En el prototipo hay dos roles, con sesión local:
 
-- **Técnico.** Carga archivos. Su nombre queda en la versión y no se tipea a mano. La cuenta de Dario (`dario` / `123`) entra con este rol.
-- **Firmante.** Ve su bandeja en `/app/firmar` y da el OK de lo que tiene asignado (`firmante` / `ambito`).
+- **Técnico.** Es el operario que carga archivos. Su nombre queda en la versión y no se tipea a mano. La cuenta de Dario (`dario` / `123`) entra con este rol.
+- **Firmante.** Es el supervisor (gerente, CEO o jefe). Ve su bandeja en `/app/firmar` y valida lo que subió el operario (`firmante` / `ambito`).
 
-Las cuentas de demostración viven en el cliente. No son un acceso de producción ([ADR-003](05-decisions.md#adr-003--el-acceso-del-prototipo-es-local-y-no-es-producción)).
+Las cuentas de demostración viven en el cliente. No son un acceso de producción ([ADR-003](05-decisions.md#adr-003--el-acceso-del-prototipo-es-local-y-no-es-producción)). En el encabezado, Operario y Dueño cambian la sesión para probar las dos cuentas sin volver a entrar.
 
 ## Qué hace el prototipo
 
 - Crear clientes, corregir su ficha y eliminarlos. Al eliminar un cliente se borra su expediente.
-- El menú tiene Novedades y Recursos, Gestión Ambiental, Plan de Monitoreo, Documentación y Reportes.
+- El menú tiene Novedades y Recursos, Gestión Ambiental, Plan de Monitoreo, Documentación y Reportes. El Dueño también ve Para firmar. En la computadora está a la izquierda y se puede cerrar a los íconos. El menú y la barra son blancos, y el verde marca la sección elegida.
 - Abrir el expediente de ejemplo "Planta demo" desde Gestión Ambiental.
 - Al abrir un cliente se ve primero su estado: vencidos, por vencer, faltan y por firmar. Tocar uno filtra la lista. La ficha se edita o se elimina desde el menú.
 - Ver primero lo vencido, lo que vence en 30 días y lo que falta.
@@ -36,6 +36,7 @@ Las cuentas de demostración viven en el cliente. No son un acceso de producció
 - Eliminar una versión subida hasta que el firmante da el OK.
 - Editar un archivo ya aprobado: se abre una versión nueva pendiente de OK y la aprobada queda en el historial.
 - Ver en cada requisito quién hizo qué y cuándo.
+- En Plan de Monitoreo, cada mes separado en pendientes y realizadas. En Reportes, el informe del mes dice qué se hizo y qué queda: realizadas, dentro de tiempo, fuera de tiempo, pendientes, por vencerse y vencidas, con la lista de ese mes ([ADR-014](05-decisions.md#adr-014--el-informe-del-mes-compara-la-carga-con-el-plazo)). Planta demo trae ejemplos a tiempo, fuera de tiempo y por vencer.
 - Conservar los clientes en el navegador. Un archivo grande se descarga en la misma pestaña, pero no sobrevive a una recarga.
 
 ## Qué no entra todavía

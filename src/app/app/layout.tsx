@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { CalendarDays, ClipboardList, FileText, Leaf, LogOut, Menu, Newspaper, X } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, ClipboardList, FileText, Leaf, LogOut, Menu, Newspaper, PenLine, X } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { AppStateProvider, useAppState } from "@/modules/clients/components/app-state.tsx";
 import { Button } from "@/components/ui/button.tsx";
 
@@ -32,16 +33,41 @@ function activeSection(pathname: string): string {
   return "gestion";
 }
 
-function navClass(active: boolean) {
-  return active
-    ? "nav-active inline-flex h-11 items-center gap-2 rounded-full px-4 text-base font-semibold"
-    : "nav-idle inline-flex h-11 items-center gap-2 rounded-full px-4 text-base font-medium";
-}
-
 function mobileNavClass(active: boolean) {
   return active
     ? "nav-active flex h-14 w-full items-center gap-3 rounded-2xl px-4 text-xl font-semibold"
     : "nav-idle flex h-14 w-full items-center gap-3 rounded-2xl px-4 text-xl font-medium";
+}
+
+function sideNavClass(active: boolean, collapsed: boolean) {
+  if (collapsed) return active ? "nav-side-icon-active" : "nav-side-icon";
+  return active ? "nav-side-active" : "nav-side";
+}
+
+function SideLink({
+  href,
+  label,
+  icon: Icon,
+  active,
+  collapsed,
+}: {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  active: boolean;
+  collapsed: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={sideNavClass(active, collapsed)}
+      aria-current={active ? "page" : undefined}
+      aria-label={collapsed ? label : undefined}
+    >
+      <Icon className="size-5 shrink-0" aria-hidden />
+      {collapsed ? null : label}
+    </Link>
+  );
 }
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -52,10 +78,59 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
+function RoleToggle() {
+  const app = useAppState();
+  const owner = app.user?.role === "firmante";
+
+  return (
+    <div className="inline-flex rounded-full bg-[var(--mist)] p-1" role="group" aria-label="Ver la app como">
+      <button
+        type="button"
+        aria-pressed={!owner}
+        onClick={() => {
+          if (!owner) return;
+          app.switchRole("tecnico");
+        }}
+        className={roleToggleClass(!owner)}
+      >
+        Operario
+      </button>
+      <button
+        type="button"
+        aria-pressed={owner}
+        onClick={() => {
+          if (owner) return;
+          app.switchRole("firmante");
+        }}
+        className={roleToggleClass(owner)}
+      >
+        Dueño
+      </button>
+    </div>
+  );
+}
+
+function roleToggleClass(active: boolean) {
+  return active
+    ? "h-10 rounded-full bg-[var(--moss)] px-3 text-base font-semibold text-white"
+    : "h-10 rounded-full px-3 text-base font-medium text-[var(--forest)]";
+}
+
+function UserName({ name }: { name: string }) {
+  return (
+    <span className="inline-flex items-center gap-2 text-base text-[var(--ink)]">
+      <span className="size-2.5 rounded-full bg-[var(--moss)]" aria-hidden />
+      {name}
+    </span>
+  );
+}
+
 function Shell({ children }: { children: React.ReactNode }) {
   const app = useAppState();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const owner = app.user?.role === "firmante";
 
   useEffect(() => {
     setMenuOpen(false);
@@ -77,110 +152,137 @@ function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-[var(--paper)] text-[var(--ink)]">
-      <header className="app-chrome border-b border-[var(--ink)]/8 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
-          <Link href="/app" className="text-2xl font-semibold tracking-tight">
-            Ámbito
-          </Link>
-          <div className="flex items-center gap-3">
-            {app.user.role === "firmante" ? (
-              <Link href="/app/firmar" className="text-base font-medium text-[var(--forest)]">
-                Para firmar
-              </Link>
-            ) : null}
-            <span className="inline-flex items-center gap-2 text-base">
-              <span className="size-2.5 rounded-full bg-[var(--moss)]" aria-hidden />
-              {app.user.name}
-            </span>
-            <button
-              type="button"
-              onClick={app.logout}
-              className="hidden text-base font-medium text-[var(--forest)] md:inline"
-            >
-              Salir
-            </button>
-            <button
-              type="button"
-              className="inline-flex size-12 items-center justify-center rounded-full text-[var(--ink)] md:hidden"
-              aria-label="Abrir menú"
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen(true)}
-            >
-              <Menu className="size-7" aria-hidden />
-            </button>
-          </div>
+      <aside className={`app-chrome app-side fixed inset-y-0 left-0 z-40 hidden flex-col overflow-hidden border-r border-[var(--ink)]/8 bg-white text-[var(--forest)] md:flex ${collapsed ? "is-rail" : ""}`}>
+        <div className={`flex h-[4.5rem] shrink-0 items-center border-b border-[var(--ink)]/8 ${collapsed ? "justify-center" : "justify-between gap-2 px-4"}`}>
+          {collapsed ? null : (
+            <Link href="/app" className="min-w-0 truncate text-2xl font-semibold tracking-tight text-[var(--forest)]">
+              Ámbito
+            </Link>
+          )}
+          <button
+            type="button"
+            aria-label={collapsed ? "Abrir menú" : "Cerrar menú"}
+            onClick={() => setCollapsed((open) => !open)}
+            className="inline-flex size-9 items-center justify-center text-[var(--forest)]"
+          >
+            {collapsed ? <ChevronRight className="size-5" aria-hidden /> : <ChevronLeft className="size-5" aria-hidden />}
+          </button>
         </div>
-        <nav
-          className={`mx-auto hidden max-w-5xl flex-wrap items-center gap-1 px-4 md:flex ${pathname === "/app" ? "pb-3" : ""}`}
-        >
-          {NAV.map((item) => {
-            const active = current === item.id;
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.id}
-                href={item.href}
-                className={navClass(active)}
-                aria-current={active ? "page" : undefined}
-              >
-                <Icon className="size-4" aria-hidden />
-                {item.label}
-              </Link>
-            );
-          })}
+        <nav className="flex flex-col py-2">
+          {NAV.map((item) => (
+            <SideLink
+              key={item.id}
+              href={item.href}
+              label={item.label}
+              icon={item.icon}
+              active={current === item.id}
+              collapsed={collapsed}
+            />
+          ))}
+          {owner ? (
+            <SideLink
+              href="/app/firmar"
+              label="Para firmar"
+              icon={PenLine}
+              active={current === "firmar"}
+              collapsed={collapsed}
+            />
+          ) : null}
         </nav>
+      </aside>
+      <div className={`app-main min-h-screen ${collapsed ? "is-rail" : ""}`}>
+        <header className="app-chrome border-b border-[var(--ink)]/8 bg-white">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 md:hidden">
+            <Link href="/app" className="text-2xl font-semibold tracking-tight text-[var(--forest)]">
+              Ámbito
+            </Link>
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <RoleToggle />
+              <UserName name={app.user.name} />
+              <button
+                type="button"
+                className="inline-flex size-12 items-center justify-center rounded-full text-[var(--forest)]"
+                aria-label="Abrir menú"
+                aria-expanded={menuOpen}
+                onClick={() => setMenuOpen(true)}
+              >
+                <Menu className="size-7" aria-hidden />
+              </button>
+            </div>
+          </div>
+          <div className="hidden h-[4.5rem] items-center justify-between gap-3 px-4 md:flex">
+            <div className="min-w-0 text-sm text-[var(--muted)]">{pathname === "/app" ? null : <Crumb />}</div>
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <RoleToggle />
+              <UserName name={app.user.name} />
+              <button type="button" onClick={app.logout} className="text-base font-medium text-[var(--forest)]">
+                Salir
+              </button>
+            </div>
+          </div>
+        </header>
         {pathname === "/app" ? null : (
-          <div className="mx-auto max-w-5xl px-4 pt-2 pb-3 text-sm text-[var(--muted)]">
+          <div className="px-4 pt-3 text-sm text-[var(--muted)] md:hidden">
             <Crumb />
           </div>
         )}
-      </header>
-      {menuOpen ? (
-        <div className="app-chrome fixed inset-0 z-50 flex min-h-dvh flex-col bg-white md:hidden">
-          <div className="flex items-center justify-between px-4 py-3">
-            <p className="text-2xl font-semibold tracking-tight">Ámbito</p>
-            <button
-              type="button"
-              className="inline-flex size-12 items-center justify-center rounded-full text-[var(--ink)]"
-              aria-label="Cerrar"
-              onClick={() => setMenuOpen(false)}
-            >
-              <X className="size-7" aria-hidden />
-            </button>
-          </div>
-          <nav className="flex flex-1 flex-col gap-2 px-4 py-2">
-            {NAV.map((item) => {
-              const active = current === item.id;
-              const Icon = item.icon;
-              return (
+        {menuOpen ? (
+          <div className="app-chrome fixed inset-0 z-50 flex min-h-dvh flex-col bg-white md:hidden">
+            <div className="flex items-center justify-between px-4 py-3">
+              <p className="text-2xl font-semibold tracking-tight">Ámbito</p>
+              <button
+                type="button"
+                className="inline-flex size-12 items-center justify-center rounded-full text-[var(--ink)]"
+                aria-label="Cerrar"
+                onClick={() => setMenuOpen(false)}
+              >
+                <X className="size-7" aria-hidden />
+              </button>
+            </div>
+            <nav className="flex flex-1 flex-col gap-2 px-4 py-2">
+              {NAV.map((item) => {
+                const active = current === item.id;
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    className={mobileNavClass(active)}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    <Icon className="size-6" aria-hidden />
+                    {item.label}
+                  </Link>
+                );
+              })}
+              {owner ? (
                 <Link
-                  key={item.id}
-                  href={item.href}
-                  className={mobileNavClass(active)}
-                  aria-current={active ? "page" : undefined}
+                  href="/app/firmar"
+                  className={mobileNavClass(current === "firmar")}
+                  aria-current={current === "firmar" ? "page" : undefined}
                 >
-                  <Icon className="size-6" aria-hidden />
-                  {item.label}
+                  <PenLine className="size-6" aria-hidden />
+                  Para firmar
                 </Link>
-              );
-            })}
-            <button
-              type="button"
-              onClick={app.logout}
-              className="mt-auto flex h-14 w-full items-center gap-3 rounded-2xl px-4 text-xl font-medium text-[var(--forest)]"
-            >
-              <LogOut className="size-6" aria-hidden />
-              Salir
-            </button>
-          </nav>
-        </div>
-      ) : null}
-      {app.notice ? (
-        <p className="app-chrome bg-[var(--mist)] px-4 py-2 text-base" role="status">
-          {app.notice}
-        </p>
-      ) : null}
-      {children}
+              ) : null}
+              <button
+                type="button"
+                onClick={app.logout}
+                className="mt-auto flex h-14 w-full items-center gap-3 rounded-2xl px-4 text-xl font-medium text-[var(--forest)]"
+              >
+                <LogOut className="size-6" aria-hidden />
+                Salir
+              </button>
+            </nav>
+          </div>
+        ) : null}
+        {app.notice ? (
+          <p className="app-chrome bg-[var(--mist)] px-4 py-2 text-base" role="status">
+            {app.notice}
+          </p>
+        ) : null}
+        {children}
+      </div>
     </div>
   );
 }

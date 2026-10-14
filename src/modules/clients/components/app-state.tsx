@@ -39,6 +39,7 @@ import {
   SIGNERS,
   currentUser,
   login as persistLogin,
+  loginAsRole,
   logout as persistLogout,
   type SessionUser,
 } from "@/modules/session/index.ts";
@@ -61,6 +62,7 @@ type AppContextValue = {
   notice: string;
   signers: typeof SIGNERS;
   login: (username: string, password: string) => boolean;
+  switchRole: (role: "tecnico" | "firmante") => void;
   logout: () => void;
   addClient: (input: Omit<Client, "id" | "areas">) => void;
   updateClient: (id: string, input: Omit<Client, "id" | "areas">) => void;
@@ -111,6 +113,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         if (!session) return false;
         setUser(session);
         return true;
+      },
+      switchRole(role) {
+        const session = loginAsRole(role);
+        if (session) setUser(session);
       },
       logout() {
         persistLogout();
@@ -199,7 +205,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
           approved = result.ok;
           return result.ok ? result.clients : prev;
         });
-        setNotice(approved ? "OK del firmante registrado." : "No podés dar el OK de este registro.");
+        setNotice(approved ? "Documento validado." : "No podés validar este registro.");
       },
       removePending(clientId, requirementId) {
         if (!user) return;
@@ -218,7 +224,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         setNotice(removed ? "Versión eliminada." : "Este registro no se puede eliminar.");
       },
       toggle(clientId, requirementId) {
-        setClients((prev) => toggleTask(prev, clientId, requirementId));
+        setClients((prev) => toggleTask(prev, clientId, requirementId, todayISO()));
       },
       download(requirement) {
         const current = requirement.current;

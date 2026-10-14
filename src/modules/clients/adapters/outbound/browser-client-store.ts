@@ -1,5 +1,7 @@
 import type { LegacyArea } from "../../../expediente/domain/legacy.ts";
+import { todayISO } from "../../../expediente/domain/document-code.ts";
 import type { Client } from "../../../expediente/domain/model.ts";
+import { addScheduleExamples } from "../../application/demo-examples.ts";
 import {
   DEMO_CLIENT,
   legacyAreasToClient,
@@ -8,6 +10,13 @@ import {
 
 const STORAGE_KEY = "ambito-clients-v1";
 const LEGACY_KEY = "ambito-prototype-areas-v1";
+
+function withDemoExamples(clients: Client[]): Client[] {
+  const today = todayISO();
+  return clients.map((client) =>
+    client.id === DEMO_CLIENT.id && client.demoExamples == null ? addScheduleExamples(client, today) : client,
+  );
+}
 
 function mergeMissingAreas(client: Client, seed: Client): Client {
   const savedIds = new Set(client.areas.map((area) => area.id));
@@ -23,8 +32,10 @@ export function loadClients(): Client[] {
     if (saved) {
       const parsed = JSON.parse(saved) as Client[];
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed.map((client) =>
-          client.id === DEMO_CLIENT.id ? mergeMissingAreas(client, seed[0]) : client,
+        return withDemoExamples(
+          parsed.map((client) =>
+            client.id === DEMO_CLIENT.id ? mergeMissingAreas(client, seed[0]) : client,
+          ),
         );
       }
     }
@@ -32,13 +43,13 @@ export function loadClients(): Client[] {
     if (legacy) {
       const areas = JSON.parse(legacy) as LegacyArea[];
       if (Array.isArray(areas) && areas.length > 0) {
-        return [mergeMissingAreas(legacyAreasToClient(areas, DEMO_CLIENT), seed[0])];
+        return withDemoExamples([mergeMissingAreas(legacyAreasToClient(areas, DEMO_CLIENT), seed[0])]);
       }
     }
   } catch {
-    return seed;
+    return withDemoExamples(seed);
   }
-  return seed;
+  return withDemoExamples(seed);
 }
 
 export function saveClients(clients: Client[]) {

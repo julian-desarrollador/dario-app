@@ -188,3 +188,15 @@ Cada entrada tiene número, título, fecha, estado, contexto, decisión, alterna
 
 **Consecuencias.** La auditoría depende de que la base no ofrezca un update de esa tabla al rol de la aplicación.
 
+### ADR-014 · El informe del mes compara la carga con el plazo
+
+**Fecha:** 2026-10-13 · **Estado:** aceptada
+
+**Contexto.** Dario pidió que el supervisor vea, por mes, cuántas cargas se hicieron a tiempo, cuántas fuera de tiempo y cuántas están por vencerse. El vencimiento de un documento es su vigencia: al subir el siguiente, el requisito pasa al vencimiento nuevo. Comparar la carga contra ese vencimiento nuevo marcaría todo como a tiempo. El pedido está anotado en [pedidos-2026-10-08.md](pedidos-2026-10-08.md).
+
+**Decisión.** Cada versión guarda `deadline`, el vencimiento que regía antes de subirla. Si se corrige una versión que todavía no tiene OK, conserva ese plazo. Una tarea guarda `doneAt` el día en que se marca hecha. El mes del informe y del cronograma es el mes de ese plazo. Está a tiempo si la fecha de carga es igual o anterior al plazo. El catálogo declarado, sin archivo subido, no cuenta como realizada. Una tarea hecha de antes, sin `doneAt`, cuenta como realizada y no entra en a tiempo ni en fuera de tiempo.
+
+**Alternativas consideradas.** Comparar `createdAt` con el `dueDate` actual. Se descarta: el vencimiento nuevo es la vigencia del documento que se acaba de cargar, no el plazo que se estaba cumpliendo.
+
+**Consecuencias.** El Plan de Monitoreo y Reportes leen la misma lista. Los datos viejos, sin `deadline`, siguen leyéndose. Un archivo ya subido sin ese campo cuenta como realizado en el mes de su vencimiento actual, sin calificar el tiempo.
+
