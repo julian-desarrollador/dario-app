@@ -332,6 +332,7 @@ function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[var(--paper)] px-4">
@@ -339,12 +340,17 @@ function LoginScreen() {
         className="panel w-full max-w-sm p-6"
         onSubmit={(event) => {
           event.preventDefault();
-          if (!app.login(username, password)) {
-            setError("Usuario o clave incorrectos.");
-            return;
-          }
+          if (pending) return;
+          setPending(true);
           setError("");
-          setPassword("");
+          void app.login(username, password).then((ok) => {
+            setPending(false);
+            if (!ok) {
+              setError("Usuario o clave incorrectos.");
+              return;
+            }
+            setPassword("");
+          });
         }}
       >
         <p className="text-2xl font-semibold tracking-tight">Ámbito</p>
@@ -371,10 +377,10 @@ function LoginScreen() {
           />
         </label>
         {error ? <p className="mt-3 text-base text-[var(--alert)]">{error}</p> : null}
-        <Button type="submit" className="mt-5 h-11 w-full text-base">
+        <Button type="submit" className="mt-5 h-11 w-full text-base" disabled={pending}>
           Entrar
         </Button>
-        <p className="mt-4 text-sm text-[var(--muted)]">Usuario dario · clave 123</p>
+        <p className="mt-4 text-sm text-[var(--muted)]">Usuario dario</p>
       </form>
     </div>
   );

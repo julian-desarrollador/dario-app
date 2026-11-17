@@ -5,49 +5,51 @@ export type SessionUser = {
   role: "tecnico" | "firmante";
 };
 
-type Account = SessionUser & { password: string };
+export type Account = SessionUser & { password: string };
 
-const ACCOUNTS: Account[] = [
+export const USERS: SessionUser[] = [
   {
     id: "dario",
     username: "dario",
-    password: "123",
     name: "Dario",
     role: "tecnico",
   },
   {
     id: "tecnico",
     username: "tecnico",
-    password: "ambito",
     name: "Técnico",
     role: "tecnico",
   },
   {
     id: "firmante",
     username: "firmante",
-    password: "ambito",
     name: "Firmante",
     role: "firmante",
   },
 ];
 
-export const SIGNERS: Pick<SessionUser, "id" | "name">[] = ACCOUNTS.filter(
+export const SIGNERS: Pick<SessionUser, "id" | "name">[] = USERS.filter(
   (account) => account.role === "firmante",
 ).map(({ id, name }) => ({ id, name }));
 
-/** Demo pair Dario uses to try the operator and the owner without typing passwords. */
-export function accountForRole(role: SessionUser["role"]): { username: string; password: string } {
+/** Operario is Dario. Dueño is the signer. The header switches these without a password. */
+export function userForRole(role: SessionUser["role"]): SessionUser {
   const account =
     role === "firmante"
-      ? ACCOUNTS.find((item) => item.role === "firmante")
-      : ACCOUNTS.find((item) => item.id === "dario");
-  return { username: account?.username ?? "", password: account?.password ?? "" };
+      ? USERS.find((item) => item.role === "firmante")
+      : USERS.find((item) => item.id === "dario");
+  return account ?? USERS[0];
 }
 
-export function authenticate(username: string, password: string): SessionUser | null {
-  const account = ACCOUNTS.find(
-    (item) =>
-      item.username === username.trim().toLowerCase() && item.password === password,
+export function authenticate(
+  username: string,
+  password: string,
+  accounts: Account[],
+): SessionUser | null {
+  const normalized = username.trim().toLowerCase();
+  if (!password) return null;
+  const account = accounts.find(
+    (item) => item.username === normalized && item.password === password,
   );
   if (!account) return null;
   return {

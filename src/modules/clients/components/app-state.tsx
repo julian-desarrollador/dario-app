@@ -38,9 +38,10 @@ import {
 import {
   SIGNERS,
   currentUser,
-  login as persistLogin,
   loginAsRole,
   logout as persistLogout,
+  saveSession,
+  signIn,
   type SessionUser,
 } from "@/modules/session/index.ts";
 
@@ -61,7 +62,7 @@ type AppContextValue = {
   clients: Client[];
   notice: string;
   signers: typeof SIGNERS;
-  login: (username: string, password: string) => boolean;
+  login: (username: string, password: string) => Promise<boolean>;
   switchRole: (role: "tecnico" | "firmante") => void;
   logout: () => void;
   addClient: (input: Omit<Client, "id" | "areas">) => void;
@@ -108,11 +109,16 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       clients,
       notice,
       signers: SIGNERS,
-      login(username, password) {
-        const session = persistLogin(username, password);
-        if (!session) return false;
-        setUser(session);
-        return true;
+      async login(username, password) {
+        try {
+          const session = await signIn(username, password);
+          if (!session) return false;
+          saveSession(session);
+          setUser(session);
+          return true;
+        } catch {
+          return false;
+        }
       },
       switchRole(role) {
         const session = loginAsRole(role);

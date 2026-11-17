@@ -1,3 +1,4 @@
 export type { SessionUser } from "./domain/authenticate.ts";
-export { SIGNERS, accountForRole, authenticate } from "./domain/authenticate.ts";
-export { currentUser, login, loginAsRole, logout } from "./adapters/outbound/browser-session.ts";
+export { SIGNERS } from "./domain/authenticate.ts";
+export { currentUser, loginAsRole, logout, saveSession } from "./adapters/outbound/browser-session.ts";
+export { signIn } from "./adapters/outbound/sign-in.ts";
